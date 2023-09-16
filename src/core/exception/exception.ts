@@ -53,8 +53,9 @@ export class Exception extends HttpException {
     };
   }
 
-  equals(exception: Exception): boolean {
+  equals(exception: unknown): boolean {
     return (
+      exception instanceof Exception &&
       exception.errorCode === this.errorCode &&
       exception.getStatus() === this.getStatus()
     );
@@ -73,7 +74,7 @@ export function exception(
       args.status,
       args.message ?? getReasonPhrase(args.status),
       args.errorCode,
-      args.error ?? error ?? getReasonPhrase(args.status),
+      args.error ?? (error || getReasonPhrase(args.status)),
       args.description,
     );
 }
