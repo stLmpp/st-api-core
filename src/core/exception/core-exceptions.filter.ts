@@ -13,8 +13,8 @@ import { Class } from 'type-fest';
 import {
   ROUTE_NOT_FOUND,
   UNKNOWN_INTERNAL_SERVER_ERROR,
-} from './exception/core-exceptions.js';
-import { Exception } from './exception/exception.js';
+} from './core-exceptions.js';
+import { Exception } from './exception.js';
 
 type PossibleException<T = any> = {
   type: Class<T>;
@@ -29,7 +29,7 @@ function possibleException<T>(
 }
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
+export class CoreExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   private readonly possibleExceptions: PossibleException[] = [

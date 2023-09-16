@@ -80,9 +80,6 @@ export async function createNestApp(
         return request;
       }`,
   });
-  if (DEV_MODE) {
-    nestApp.enableCors();
-  }
 
   await nestApp.init();
   return [expressApp, nestApp];

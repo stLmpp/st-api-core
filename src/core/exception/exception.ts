@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { getReasonPhrase } from 'http-status-codes';
 import { SetOptional } from 'type-fest';
 
-import { safe } from '../../common/safe.js';
+import { safe } from '../../common/index.js';
 import { getCorrelationId } from '../internal-state.js';
 
 import {
@@ -51,6 +51,13 @@ export class Exception extends HttpException {
       message: this.message,
       status: this.getStatus(),
     };
+  }
+
+  equals(exception: Exception): boolean {
+    return (
+      exception.errorCode === this.errorCode &&
+      exception.getStatus() === this.getStatus()
+    );
   }
 }
 

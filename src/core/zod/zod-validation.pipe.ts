@@ -1,7 +1,7 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { Paramtype } from '@nestjs/common/interfaces/features/paramtype.interface.js';
 
-import { formatZodErrorString } from '../../common/zod-error-formatter.js';
+import { formatZodErrorString } from '../../common/index.js';
 import {
   BAD_REQUEST_BODY,
   BAD_REQUEST_PARAMS,
@@ -20,7 +20,7 @@ const NEST_ZOD_PIPE_EXCEPTIONS: Record<Paramtype, ExceptionFactoryWithError> = {
 };
 
 @Injectable()
-export class NestZodPipe implements PipeTransform {
+export class ZodValidationPipe implements PipeTransform {
   async transform(
     value: unknown,
     { type, metatype }: ArgumentMetadata,
