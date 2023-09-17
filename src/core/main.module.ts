@@ -1,6 +1,8 @@
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import { CoreModule } from './core.module.js';
+
 export interface MainModuleOptions {
   secrets: Record<string, string>;
   module: Type;
@@ -15,6 +17,7 @@ export class MainModule {
         ConfigModule.forRoot({
           load: [() => options.secrets],
         }),
+        CoreModule.forRoot(),
         options.module,
       ],
     };

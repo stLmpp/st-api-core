@@ -1,18 +1,11 @@
-import { DynamicModule, Injectable, Module } from '@nestjs/common';
-import {
-  FirebaseApp as FirebaseAppInterface,
-  FirebaseOptions,
-  initializeApp,
-} from 'firebase/app';
-import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
+import { DynamicModule, Module } from '@nestjs/common';
+import { FirebaseOptions, initializeApp } from 'firebase/app';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
 
-import { getClazz } from '../common/get-clazz.js';
+import { NodeEnvEnum } from '../core/node-env.token.js';
 
-@Injectable()
-export class FirebaseAuth extends getClazz<Auth>() {}
-
-@Injectable()
-export class FirebaseApp extends getClazz<FirebaseAppInterface>() {}
+import { FirebaseApp } from './firebase-app.js';
+import { FirebaseAuth } from './firebase-auth.js';
 
 @Module({})
 export class FirebaseModule {
@@ -27,9 +20,9 @@ export class FirebaseModule {
         },
         {
           provide: FirebaseAuth,
-          useFactory: (app: FirebaseApp) => {
+          useFactory: (app: FirebaseApp, nodeEnv: NodeEnvEnum) => {
             const auth = getAuth(app);
-            if (DEV_MODE) {
+            if (nodeEnv === NodeEnvEnum.Development) {
               connectAuthEmulator(auth, 'http://127.0.0.1:9099');
             }
             return auth;

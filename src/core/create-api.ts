@@ -1,31 +1,34 @@
 import { Type } from '@nestjs/common';
 import { defineSecret } from 'firebase-functions/params';
 import { https } from 'firebase-functions/v2';
+import { HttpsFunction } from 'firebase-functions/v2/https';
 
-import { createNestApp } from './create-nest-app.js';
+import { createApp } from './create-app.js';
+import { getEnvironmentVariables } from './get-environment-variables.js';
 
 const DATABASE_URL = defineSecret('DATABASE_URL');
 
-export function createApi(module: Type) {
+export function createApi(module: Type): HttpsFunction {
+  const environment = getEnvironmentVariables();
   return https.onRequest(
     {
       secrets: [DATABASE_URL],
-      timeoutSeconds: 20,
-      cpu: 1,
-      region: 'us-east1',
-      minInstances: 0,
-      maxInstances: 2,
-      concurrency: 50,
-      memory: '256MiB',
+      timeoutSeconds: environment.AD_TIMEOUT_SECONDS,
+      cpu: environment.AD_CPU,
+      region: environment.AD_REGION,
+      minInstances: environment.AD_MIN_INSTANCES,
+      maxInstances: environment.AD_MAX_INSTANCES,
+      concurrency: environment.AD_CONCURRENCY,
+      memory: environment.AD_MEMORY,
     },
     async (request, response) => {
-      const [app] = await createNestApp({
+      const { expressApp } = await createApp({
         secrets: {
           DATABASE_URL,
         },
         module,
       });
-      app(request, response);
+      expressApp(request, response);
     },
   );
 }

@@ -7,6 +7,7 @@ import { Throttler } from '../core/throttler/throttler.js';
 import { ThrottlerOptionsArgs } from '../core/throttler/throttler.type.js';
 
 import { FirebaseAdminFirestore } from './firebase-admin-firestore.js';
+import { FirebaseFunctionsRateLimiterToken } from './firebase-functions-rate-limiter.token.js';
 
 export const FirestoreThrottlerCollectionNameToken =
   'FirestoreThrottlerCollectionNameToken';
@@ -17,6 +18,8 @@ export class FirestoreThrottler extends Throttler {
     private readonly firebaseAdminFirestore: FirebaseAdminFirestore,
     @Inject(FirestoreThrottlerCollectionNameToken)
     private readonly collectionName: string,
+    @Inject(FirebaseFunctionsRateLimiterToken)
+    private readonly firebaseFunctionsRateLimiter: typeof FirebaseFunctionsRateLimiter,
   ) {
     super();
   }
@@ -26,7 +29,7 @@ export class FirestoreThrottler extends Throttler {
     ttl,
     limit,
   }: ThrottlerOptionsArgs): Promise<void> {
-    const rateLimiter = FirebaseFunctionsRateLimiter.withFirestoreBackend(
+    const rateLimiter = this.firebaseFunctionsRateLimiter.withFirestoreBackend(
       {
         name: this.collectionName,
         maxCalls: limit,

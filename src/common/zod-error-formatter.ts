@@ -1,8 +1,8 @@
 import { type ZodError, type ZodIssue, ZodIssueCode } from 'zod';
 
+import { arrayGroupToMap } from './array-group-to-map.js';
+import { arrayUniqWith } from './array-uniq-with.js';
 import { coerceArray } from './coerce-array.js';
-import { group_to_map } from './group-to-map.js';
-import { arrayUniqWith } from './uniq-with.js';
 
 export interface ZodErrorFormatted {
   path: string;
@@ -12,7 +12,7 @@ export interface ZodErrorFormatted {
 export function formatZodErrorString(
   zod_error_or_errors: ZodError | ZodError[],
 ): string {
-  const errors = format_zod_error(zod_error_or_errors);
+  const errors = formatZodError(zod_error_or_errors);
   return errors
     .map((error) => `${error.path ? `${error.path}: ` : ''}${error.message}`)
     .join(', ');
@@ -21,7 +21,7 @@ export function formatZodErrorString(
 /**
  * @description Flatten one or multiple {@link ZodError} into an array of objects
  */
-export function format_zod_error(
+export function formatZodError(
   zod_error_or_errors: ZodError | ZodError[],
 ): ZodErrorFormatted[] {
   // Get all errors in an array of objects
@@ -33,7 +33,7 @@ export function format_zod_error(
       error_a.path === error_b.path && error_a.message === error_b.message,
   );
   // Group errors by the path
-  const grouped_errors = group_to_map(unique_errors, (item) => item.path);
+  const grouped_errors = arrayGroupToMap(unique_errors, (item) => item.path);
   const final_errors: ZodErrorFormatted[] = [];
   // Loop through all grouped errors and join their descriptions
   for (const [key, value] of grouped_errors) {
@@ -54,7 +54,7 @@ function format_zod_error_internal(
     (errorsLevel1, error) => [
       ...errorsLevel1,
       ...error.issues.reduce(
-        (errorsLevel2, issue) => [...errorsLevel2, ...format_zod_issue(issue)],
+        (errorsLevel2, issue) => [...errorsLevel2, ...formatZodIssue(issue)],
         get_initial(),
       ),
     ],
@@ -65,11 +65,11 @@ function format_zod_error_internal(
 /**
  * @description Flatten a {@link ZodIssue} into an array of objects
  */
-export function format_zod_issue(issue: ZodIssue): ZodErrorFormatted[] {
+export function formatZodIssue(issue: ZodIssue): ZodErrorFormatted[] {
   const errors: ZodErrorFormatted[] = [
     {
       message: issue.message,
-      path: format_zod_issue_path(issue.path),
+      path: formatZodIssuePath(issue.path),
     },
   ];
   switch (issue.code) {
@@ -93,7 +93,7 @@ export function format_zod_issue(issue: ZodIssue): ZodErrorFormatted[] {
  * @description Transform a path array into a string
  * Example: ["config", "requests", 0, "name"] --> "config.requests[0].name"
  */
-export function format_zod_issue_path(path: (string | number)[]): string {
+export function formatZodIssuePath(path: (string | number)[]): string {
   return path.reduce((fullPath: string, item: string | number) => {
     if (typeof item === 'number') {
       return `${fullPath}[${item}]`;

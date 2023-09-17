@@ -1,18 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
 
-import { HttpStatus } from '@nestjs/common';
 import { RequestHandler } from 'express';
-
-import { exception } from './exception/exception.js';
-
-const INTERNAL_STATE_OUT_OF_CONTEXT = () =>
-  exception({
-    status: HttpStatus.INTERNAL_SERVER_ERROR,
-    errorCode: 'CORE-0004',
-    error:
-      'Could not get internal state, make sure your function is running in the context',
-  });
 
 export interface InternalState {
   correlationId: string;
@@ -27,7 +16,9 @@ export function createCorrelationId(): string {
 export function getCorrelationId(): string {
   const state = ASYNC_LOCAL_STORAGE.getStore();
   if (!state) {
-    throw INTERNAL_STATE_OUT_OF_CONTEXT()();
+    throw new Error(
+      'Could not get internal state, make sure your function is running in the context',
+    );
   }
   return state.correlationId;
 }

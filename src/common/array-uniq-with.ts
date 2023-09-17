@@ -9,8 +9,8 @@ export function arrayUniqWith<T>(
   const set = new Set<number>();
   for (let indexA = 0; indexA < array.length; indexA++) {
     for (let indexB = indexA + 1; indexB < array.length; indexB++) {
-      const valueA = array[indexA];
-      const valueB = array[indexB];
+      const valueA = array[indexA]!;
+      const valueB = array[indexB]!;
       if (comparator(valueA, valueB)) {
         set.add(indexA);
         break;

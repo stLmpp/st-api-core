@@ -2,10 +2,11 @@ import { HttpCode, HttpStatus, UseInterceptors } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { z, ZodSchema } from 'zod';
 
+import { coerceArray } from '../../common/coerce-array.js';
 import { generateSchema } from '../../common/generate-schema.js';
 
-import { nestZodInterceptorFactory } from './nest-zod-interceptor.factory.js';
 import { ZOD_DTO_SCHEMA, ZodDto, ZodDtoInternal } from './zod-dto.js';
+import { zodInterceptorFactory } from './zod-interceptor.factory.js';
 
 export function Response<T extends ZodSchema>(
   dto: ZodDto<T> | ZodDto<T>[],
@@ -13,7 +14,7 @@ export function Response<T extends ZodSchema>(
 ): MethodDecorator {
   return (target, propertyKey, descriptor) => {
     const isArray = Array.isArray(dto);
-    const single = isArray ? dto[0] : dto;
+    const single = coerceArray(dto)[0];
     const schema = (single as ZodDtoInternal)[ZOD_DTO_SCHEMA];
     const fullSchema = isArray ? z.array(schema) : schema;
     HttpCode(status);
@@ -26,7 +27,7 @@ export function Response<T extends ZodSchema>(
       status,
       isArray,
     })(target, propertyKey, descriptor);
-    UseInterceptors(nestZodInterceptorFactory(fullSchema))(
+    UseInterceptors(zodInterceptorFactory(fullSchema))(
       target,
       propertyKey,
       descriptor,

@@ -15,22 +15,24 @@ import { MainModule } from './main.module.js';
   return Number(this);
 };
 
-let expressApp: Express | undefined;
-let nestApp: INestApplication | undefined;
-
-export interface CreateNestAppOptions {
+export interface CreateAppOptions {
   secrets?: Record<string, ReturnType<typeof defineSecret>>;
   module: Type;
 }
 
-export async function createNestApp(
-  options: CreateNestAppOptions,
-): Promise<[Express, INestApplication]> {
-  if (expressApp && nestApp) {
-    return [expressApp, nestApp];
+export interface App {
+  nestApp: INestApplication;
+  expressApp: Express;
+}
+
+let app: App | undefined;
+
+export async function createApp(options: CreateAppOptions): Promise<App> {
+  if (app) {
+    return app;
   }
-  expressApp = express();
-  nestApp = await NestFactory.create(
+  const expressApp = express();
+  const nestApp = await NestFactory.create(
     MainModule.create({
       secrets: Object.fromEntries(
         Object.entries(options.secrets ?? {}).map(([secretName, secret]) => [
@@ -80,10 +82,7 @@ export async function createNestApp(
         return request;
       }`,
   });
-  if (DEV_MODE) {
-    nestApp.enableCors();
-  }
 
   await nestApp.init();
-  return [expressApp, nestApp];
+  return (app = { expressApp, nestApp });
 }

@@ -1,8 +1,10 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
-import { AllExceptionsFilter } from './all-exceptions.filter.js';
-import { NestZodPipe } from './zod/nest-zod.pipe.js';
+import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
+import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
+import { ZodValidationPipe } from './zod/zod-validation.pipe.js';
 
 @Module({})
 export class CoreModule {
@@ -12,11 +14,19 @@ export class CoreModule {
       providers: [
         {
           provide: APP_PIPE,
-          useClass: NestZodPipe,
+          useClass: ZodValidationPipe,
         },
         {
           provide: APP_FILTER,
-          useClass: AllExceptionsFilter,
+          useClass: CoreExceptionsFilter,
+        },
+        {
+          inject: [ConfigService],
+          provide: NodeEnv,
+          useFactory: (config: ConfigService) =>
+            config.get('NODE_ENV') === 'development'
+              ? NodeEnvEnum.Development
+              : NodeEnvEnum.Production,
         },
       ],
       imports: [],

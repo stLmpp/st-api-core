@@ -13,13 +13,13 @@ import { Class } from 'type-fest';
 import {
   ROUTE_NOT_FOUND,
   UNKNOWN_INTERNAL_SERVER_ERROR,
-} from './exception/core-exceptions.js';
-import { Exception } from './exception/exception.js';
+} from './core-exceptions.js';
+import { Exception } from './exception.js';
 
 type PossibleException<T = any> = {
   type: Class<T>;
   condition?: (exception: T) => boolean;
-  exception: (exception: T, context: HttpArgumentsHost) => Exception;
+  exception?: (exception: T, context: HttpArgumentsHost) => Exception;
 };
 
 function possibleException<T>(
@@ -29,7 +29,7 @@ function possibleException<T>(
 }
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
+export class CoreExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   private readonly possibleExceptions: PossibleException[] = [
@@ -43,11 +43,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }),
     possibleException({
       type: Exception,
-      exception: (exception) => exception,
     }),
   ];
 
-  catch(unknownException: unknown, host: ArgumentsHost): void {
+  async catch(unknownException: unknown, host: ArgumentsHost): Promise<void> {
     const { httpAdapter } = this.httpAdapterHost;
 
     const context = host.switchToHttp();
@@ -62,7 +61,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
       ) {
         continue;
       }
-      exception = exceptionGetter(unknownException, context);
+      exception =
+        exceptionGetter?.(unknownException, context) ?? unknownException;
     }
 
     if (!exception) {
