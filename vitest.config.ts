@@ -23,8 +23,10 @@ export default defineConfig({
         '.eslintrc.cjs',
         '**/index.ts',
         '**/*.{type,schema,token,module,config}.ts',
+        '**/*.d.ts',
       ],
     },
+    setupFiles: ['vitest.setup.ts'],
   },
   plugins: [
     swc.vite({

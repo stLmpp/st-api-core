@@ -8,6 +8,7 @@ export default defineConfig({
   dts: true,
   format: 'esm',
   platform: 'node',
+  tsconfig: 'tsconfig.build.json',
   plugins: [
     {
       name: 'clean',

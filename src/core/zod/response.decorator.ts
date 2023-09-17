@@ -2,8 +2,8 @@ import { HttpCode, HttpStatus, UseInterceptors } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { z, ZodSchema } from 'zod';
 
+import { coerceArray } from '../../common/coerce-array.js';
 import { generateSchema } from '../../common/generate-schema.js';
-import { coerceArray } from '../../common/index.js';
 
 import { ZOD_DTO_SCHEMA, ZodDto, ZodDtoInternal } from './zod-dto.js';
 import { zodInterceptorFactory } from './zod-interceptor.factory.js';

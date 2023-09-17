@@ -1,19 +1,11 @@
-import { DynamicModule, Injectable, Module } from '@nestjs/common';
-import {
-  FirebaseApp as FirebaseAppInterface,
-  FirebaseOptions,
-  initializeApp,
-} from 'firebase/app';
-import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
+import { DynamicModule, Module } from '@nestjs/common';
+import { FirebaseOptions, initializeApp } from 'firebase/app';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
 
-import { getClazz } from '../common/get-clazz.js';
 import { NodeEnvEnum } from '../core/node-env.js';
 
-@Injectable()
-export class FirebaseAuth extends getClazz<Auth>() {}
-
-@Injectable()
-export class FirebaseApp extends getClazz<FirebaseAppInterface>() {}
+import { FirebaseApp } from './firebase-app.js';
+import { FirebaseAuth } from './firebase-auth.js';
 
 @Module({})
 export class FirebaseModule {

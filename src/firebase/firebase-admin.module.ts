@@ -3,13 +3,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
+import { FirebaseFunctionsRateLimiter } from 'firebase-functions-rate-limiter/dist/FirebaseFunctionsRateLimiter.js';
 
-import {
-  Throttler,
-  ThrottlerGuard,
-  ThrottlerOptions,
-  ThrottlerOptionsToken,
-} from '../core/index.js';
+import { ThrottlerOptionsToken } from '../core/throttler/throttler-options.token.js';
+import { ThrottlerGuard } from '../core/throttler/throttler.guard.js';
+import { Throttler } from '../core/throttler/throttler.js';
+import { ThrottlerOptions } from '../core/throttler/throttler.type.js';
 
 import { FirebaseAdminApp } from './firebase-admin-app.js';
 import { FirebaseAdminAuth } from './firebase-admin-auth.js';
@@ -21,6 +20,7 @@ import {
   FirebaseAdminOptionsToken,
   FirebaseAdminOptionsType,
 } from './firebase-admin.config.js';
+import { FirebaseFunctionsRateLimiterToken } from './firebase-functions-rate-limiter.token.js';
 import {
   FirestoreThrottler,
   FirestoreThrottlerCollectionNameToken,
@@ -71,6 +71,10 @@ import {
         return firestore;
       },
       inject: [FirebaseAdminApp],
+    },
+    {
+      provide: FirebaseFunctionsRateLimiterToken,
+      useValue: FirebaseFunctionsRateLimiter,
     },
   ],
 })

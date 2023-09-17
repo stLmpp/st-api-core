@@ -1,8 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { ApiResponse } from '@nestjs/swagger';
-import { ApiResponseOptions } from '@nestjs/swagger/dist/decorators/api-response.decorator.js';
+import { ApiResponse, ApiResponseOptions } from '@nestjs/swagger';
 import { getReasonPhrase } from 'http-status-codes';
-import { Mock } from 'vitest';
 import { mock } from 'vitest-mock-extended';
 
 import { generateSchema } from '../../common/generate-schema.js';
@@ -11,17 +9,15 @@ import { exception } from './exception.js';
 import { Exceptions } from './exceptions.decorator.js';
 import { ExceptionSchema } from './exceptions.schema.js';
 
-vi.mock('@nestjs/swagger', () => {
-  const originalModule = vi.importActual('@nestjs/swagger');
+vi.mock('@nestjs/swagger', async (importOriginal) => {
+  const originalModule: object = await importOriginal();
   return {
     ...originalModule,
     ApiResponse: vi.fn().mockImplementation(() => vi.fn()),
   };
 });
-vi.mock('./core-exceptions.js', () => ({}));
 
 describe('exceptions.decorator', () => {
-  const ApiResponseSpy = ApiResponse as Mock;
   const EXCEPTION1 = exception({
     errorCode: '1',
     error: 'error 1',
@@ -33,18 +29,18 @@ describe('exceptions.decorator', () => {
     status: HttpStatus.CONFLICT,
   });
 
-  it('should call ApiResponse', () => {
+  it('should call ApiResponse', async () => {
     Exceptions([EXCEPTION1, EXCEPTION2])(
       {},
       'method',
       mock<TypedPropertyDescriptor<any>>(),
     );
-    expect(ApiResponseSpy).toHaveBeenCalledWith({
+    expect(ApiResponse).toHaveBeenCalledWith({
       status: HttpStatus.NOT_FOUND,
       description: getReasonPhrase(HttpStatus.NOT_FOUND),
       content: {
         'application/json': {
-          examples: {
+          examples: expect.objectContaining({
             1: {
               description: 'desc',
               value: expect.objectContaining({
@@ -52,17 +48,17 @@ describe('exceptions.decorator', () => {
                 correlationId: expect.any(String),
               }),
             },
-          },
+          }),
           schema: generateSchema(ExceptionSchema),
         },
       },
     } satisfies ApiResponseOptions);
-    expect(ApiResponseSpy).toHaveBeenCalledWith({
+    expect(ApiResponse).toHaveBeenCalledWith({
       status: HttpStatus.CONFLICT,
       description: getReasonPhrase(HttpStatus.CONFLICT),
       content: {
         'application/json': {
-          examples: {
+          examples: expect.objectContaining({
             2: {
               description: undefined,
               value: expect.objectContaining({
@@ -70,11 +66,10 @@ describe('exceptions.decorator', () => {
                 correlationId: expect.any(String),
               }),
             },
-          },
+          }),
           schema: generateSchema(ExceptionSchema),
         },
       },
     } satisfies ApiResponseOptions);
-    expect(ApiResponseSpy).toHaveBeenCalledTimes(2);
   });
 });

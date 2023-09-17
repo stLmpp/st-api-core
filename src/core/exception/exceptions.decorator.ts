@@ -4,8 +4,8 @@ import { ApiResponse } from '@nestjs/swagger';
 import { getReasonPhrase } from 'http-status-codes';
 import { ExamplesObject } from 'openapi3-ts/oas31';
 
+import { arrayUniqBy } from '../../common/array-uniq-by.js';
 import { generateSchema } from '../../common/generate-schema.js';
-import { arrayUniqBy } from '../../common/index.js';
 
 import * as CoreExceptions from './core-exceptions.js';
 import { ExceptionFactory } from './exception.type.js';

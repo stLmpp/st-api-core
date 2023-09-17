@@ -1,7 +1,7 @@
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { Paramtype } from '@nestjs/common/interfaces/features/paramtype.interface.js';
 
-import { formatZodErrorString } from '../../common/index.js';
+import { formatZodErrorString } from '../../common/zod-error-formatter.js';
 import {
   BAD_REQUEST_BODY,
   BAD_REQUEST_PARAMS,

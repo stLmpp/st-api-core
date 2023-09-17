@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { getReasonPhrase } from 'http-status-codes';
 import { SetOptional } from 'type-fest';
 
-import { safe } from '../../common/index.js';
+import { safe } from '../../common/safe.js';
 import { getCorrelationId } from '../internal-state.js';
 
 import {

@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "vitest.d.ts"],
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noEmit": true,
