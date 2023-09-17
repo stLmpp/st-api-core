@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 
-import { NodeEnvEnum } from '../core/node-env.js';
+import { NodeEnvEnum } from '../core/node-env.token.js';
 
 import { FirebaseApp } from './firebase-app.js';
 import { FirebaseAuth } from './firebase-auth.js';

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
-import { NodeEnv, NodeEnvEnum } from './node-env.js';
+import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
 import { ZodValidationPipe } from './zod/zod-validation.pipe.js';
 
 @Module({})
