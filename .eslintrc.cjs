@@ -197,7 +197,9 @@ module.exports = {
           args: true,
           Args: true,
           ref: true,
-          Ref: true
+          Ref: true,
+          env: true,
+          Env: true,
         },
       },
     ],

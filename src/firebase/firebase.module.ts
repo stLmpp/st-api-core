@@ -7,6 +7,7 @@ import {
 import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 
 import { getClazz } from '../common/get-clazz.js';
+import { NodeEnvEnum } from '../core/node-env.js';
 
 @Injectable()
 export class FirebaseAuth extends getClazz<Auth>() {}
@@ -27,9 +28,9 @@ export class FirebaseModule {
         },
         {
           provide: FirebaseAuth,
-          useFactory: (app: FirebaseApp) => {
+          useFactory: (app: FirebaseApp, nodeEnv: NodeEnvEnum) => {
             const auth = getAuth(app);
-            if (DEV_MODE) {
+            if (nodeEnv === NodeEnvEnum.Development) {
               connectAuthEmulator(auth, 'http://127.0.0.1:9099');
             }
             return auth;

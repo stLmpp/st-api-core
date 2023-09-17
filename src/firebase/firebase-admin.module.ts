@@ -4,10 +4,12 @@ import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 
-import { ThrottlerOptionsToken } from '../core/throttler/throttler-options.token.js';
-import { ThrottlerGuard } from '../core/throttler/throttler.guard.js';
-import { Throttler } from '../core/throttler/throttler.js';
-import { ThrottlerOptions } from '../core/throttler/throttler.type.js';
+import {
+  Throttler,
+  ThrottlerGuard,
+  ThrottlerOptions,
+  ThrottlerOptionsToken,
+} from '../core/index.js';
 
 import { FirebaseAdminApp } from './firebase-admin-app.js';
 import { FirebaseAdminAuth } from './firebase-admin-auth.js';
@@ -31,8 +33,8 @@ import {
       provide: ThrottlerOptionsToken,
       useFactory: (options: FirebaseAdminModuleOptions) =>
         ({
-          ttl: options.throttlerTtl ?? 5,
-          limit: options.throttlerLimit ?? 10,
+          ttl: options.throttlerTtl ?? 5, // TODO define better defaults
+          limit: options.throttlerLimit ?? 10, // TODO define better defaults
         }) satisfies ThrottlerOptions,
       inject: [FirebaseAdminOptionsToken],
     },

@@ -1,6 +1,6 @@
 import { type ZodError, type ZodIssue, ZodIssueCode } from 'zod';
 
-import { arrayGroupToMap } from './array-group-to-map';
+import { arrayGroupToMap } from './array-group-to-map.js';
 import { arrayUniqWith } from './array-uniq-with.js';
 import { coerceArray } from './coerce-array.js';
 

@@ -9,7 +9,7 @@ export {
   ParamDoubleSchema,
   ParamIntSchema,
 } from './common-schemas.js';
-export { arrayGroupToMap } from './array-group-to-map';
+export { arrayGroupToMap } from './array-group-to-map.js';
 export { isArray } from './is-array.js';
 export {
   safe,

@@ -1,7 +1,9 @@
 import { DynamicModule, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
+import { NodeEnv, NodeEnvEnum } from './node-env.js';
 import { ZodValidationPipe } from './zod/zod-validation.pipe.js';
 
 @Module({})
@@ -17,6 +19,14 @@ export class CoreModule {
         {
           provide: APP_FILTER,
           useClass: CoreExceptionsFilter,
+        },
+        {
+          inject: [ConfigService],
+          provide: NodeEnv,
+          useFactory: (config: ConfigService) =>
+            config.get('NODE_ENV') === 'development'
+              ? NodeEnvEnum.Development
+              : NodeEnvEnum.Production,
         },
       ],
       imports: [],

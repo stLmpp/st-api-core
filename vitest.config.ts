@@ -22,7 +22,7 @@ export default defineConfig({
         'vitest.setup.ts',
         '.eslintrc.cjs',
         '**/index.ts',
-        '**/*.{type,schema,token}.ts',
+        '**/*.{type,schema,token,module,config}.ts',
       ],
     },
   },

@@ -13,9 +13,12 @@ import { ExceptionSchema } from './exceptions.schema.js';
 
 const CORRELATION_ID_EXAMPLE = randomUUID();
 
+const CORE_EXCEPTIONS = Object.values(CoreExceptions);
+const EXCEPTION_OPENAPI_SCHEMA = generateSchema(ExceptionSchema);
+
 export function Exceptions(factories: ExceptionFactory[]): MethodDecorator {
-  const exceptions = [...factories, ...Object.values(CoreExceptions)].map(
-    (exception) => exception(''),
+  const exceptions = [...factories, ...CORE_EXCEPTIONS].map((exception) =>
+    exception(''),
   );
   return (target, propertyKey, descriptor) => {
     const statusList = arrayUniqBy(exceptions, (exception) =>
@@ -39,7 +42,7 @@ export function Exceptions(factories: ExceptionFactory[]): MethodDecorator {
         status,
         content: {
           'application/json': {
-            schema: generateSchema(ExceptionSchema),
+            schema: EXCEPTION_OPENAPI_SCHEMA,
             examples,
           },
         },

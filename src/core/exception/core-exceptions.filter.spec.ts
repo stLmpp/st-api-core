@@ -21,6 +21,7 @@ describe('core-exceptions.filter', () => {
   });
 
   beforeEach(async () => {
+    vi.resetAllMocks();
     const ref = await Test.createTestingModule({
       providers: [
         CoreExceptionsFilter,
