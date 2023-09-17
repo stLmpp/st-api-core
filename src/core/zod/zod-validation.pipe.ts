@@ -11,27 +11,40 @@ import { ExceptionFactoryWithError } from '../exception/exception.type.js';
 
 import { isZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
 
-const PARAM_TYPES = new Set<Paramtype>(['param', 'body', 'query']);
-const NEST_ZOD_PIPE_EXCEPTIONS: Record<Paramtype, ExceptionFactoryWithError> = {
-  body: BAD_REQUEST_BODY,
-  param: BAD_REQUEST_PARAMS,
-  query: BAD_REQUEST_QUERY,
-  custom: BAD_REQUEST_QUERY,
-};
-
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {
+  private readonly PARAM_TYPES: ReadonlySet<Paramtype> = new Set<Paramtype>([
+    'param',
+    'body',
+    'query',
+  ]);
+
+  private readonly NEST_ZOD_PIPE_EXCEPTIONS: Record<
+    Exclude<Paramtype, 'custom'>,
+    ExceptionFactoryWithError
+  > = {
+    body: BAD_REQUEST_BODY,
+    param: BAD_REQUEST_PARAMS,
+    query: BAD_REQUEST_QUERY,
+  };
+
+  private isParamTypeSupported(
+    type: Paramtype,
+  ): type is Exclude<Paramtype, 'custom'> {
+    return this.PARAM_TYPES.has(type);
+  }
+
   async transform(
     value: unknown,
     { type, metatype }: ArgumentMetadata,
   ): Promise<unknown> {
-    if (!PARAM_TYPES.has(type) || !isZodDto(metatype)) {
+    if (!this.isParamTypeSupported(type) || !isZodDto(metatype)) {
       return value;
     }
     const schema = metatype[ZOD_DTO_SCHEMA];
     const parsed = await schema.safeParseAsync(value);
     if (!parsed.success) {
-      const exceptionFactory = NEST_ZOD_PIPE_EXCEPTIONS[type];
+      const exceptionFactory = this.NEST_ZOD_PIPE_EXCEPTIONS[type];
       throw exceptionFactory(formatZodErrorString(parsed.error));
     }
     return parsed.data;
