@@ -1,14 +1,13 @@
 import { Type } from '@nestjs/common';
 import { defineSecret } from 'firebase-functions/params';
 import { https } from 'firebase-functions/v2';
-import { HttpsFunction } from 'firebase-functions/v2/https';
 
 import { createApp } from './create-app.js';
 import { getEnvironmentVariables } from './get-environment-variables.js';
 
 const DATABASE_URL = defineSecret('DATABASE_URL');
 
-export function createApi(module: Type): HttpsFunction {
+export function createApi(module: Type): https.HttpsFunction {
   const environment = getEnvironmentVariables();
   return https.onRequest(
     {

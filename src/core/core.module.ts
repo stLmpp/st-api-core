@@ -1,5 +1,5 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
@@ -29,7 +29,7 @@ export class CoreModule {
               : NodeEnvEnum.Production,
         },
       ],
-      imports: [],
+      imports: [ConfigModule],
     };
   }
 }
