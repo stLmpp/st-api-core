@@ -64,6 +64,8 @@ export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
 
 // Core
 export { createApi } from './core/create-api.js';
+export { CoreModule } from './core/core.module.js';
+export { getCorrelationId } from './core/internal-state.js';
 
 // Database
 export {
