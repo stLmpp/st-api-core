@@ -1,6 +1,6 @@
 export const NodeEnv = 'NodeEnvToken';
 
 export enum NodeEnvEnum {
-  Development,
-  Production,
+  Development = 'Development',
+  Production = 'Production',
 }

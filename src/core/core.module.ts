@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 
+import { AdDevMode } from './ad-dev-mode.token.js';
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
 import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
 import { ZodValidationPipe } from './zod/zod-validation.pipe.js';
@@ -27,6 +28,12 @@ export class CoreModule {
             config.get('NODE_ENV') === 'development'
               ? NodeEnvEnum.Development
               : NodeEnvEnum.Production,
+        },
+        {
+          inject: [ConfigService],
+          provide: AdDevMode,
+          useFactory: (config: ConfigService) =>
+            config.get('AD_DEV_MODE') === 'true',
         },
       ],
       imports: [ConfigModule],

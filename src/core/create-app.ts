@@ -1,4 +1,9 @@
-import { INestApplication, Type, VersioningType } from '@nestjs/common';
+import {
+  INestApplication,
+  LoggerService,
+  Type,
+  VersioningType,
+} from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -27,6 +32,19 @@ export interface App {
 
 let app: App | undefined;
 
+function getSecrets(options: CreateAppOptions): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(options.secrets ?? {}).map(([secretName, secret]) => [
+      secretName,
+      secret.value(),
+    ]),
+  );
+}
+
+function getLogger(): LoggerService | undefined {
+  return process.env.AD_DEV_MODE === 'true' ? undefined : logger;
+}
+
 export async function createApp(options: CreateAppOptions): Promise<App> {
   if (app) {
     return app;
@@ -34,17 +52,13 @@ export async function createApp(options: CreateAppOptions): Promise<App> {
   const expressApp = express();
   const nestApp = await NestFactory.create(
     MainModule.create({
-      secrets: Object.fromEntries(
-        Object.entries(options.secrets ?? {}).map(([secretName, secret]) => [
-          secretName,
-          secret.value(),
-        ]), // TODO extract into a function
-      ),
+      secrets: getSecrets(options),
       module: options.module,
     }),
     new ExpressAdapter(expressApp),
     {
-      logger,
+      logger: getLogger(),
+      // TODO search for preview mode
     },
   );
 
