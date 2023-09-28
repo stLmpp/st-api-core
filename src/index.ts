@@ -63,11 +63,12 @@ export { zodInterceptorFactory } from './core/zod/zod-interceptor.factory.js';
 export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
 
 // Core
-export { createApi } from './core/create-api.js';
+export { AdDevMode } from './core/ad-dev-mode.token.js';
 export { CoreModule } from './core/core.module.js';
+export { EnvironmentVariables } from './core/environment-variables.js';
+export { createApi } from './core/create-api.js';
 export { getCorrelationId } from './core/internal-state.js';
 export { NodeEnv } from './core/node-env.token.js';
-export { AdDevMode } from './core/ad-dev-mode.token.js';
 
 // Database
 export {
