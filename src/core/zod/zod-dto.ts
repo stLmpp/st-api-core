@@ -11,6 +11,11 @@ export interface ZodDtoInternal<T extends ZodSchema = ZodSchema>
   readonly [ZOD_DTO_SCHEMA]: T;
 }
 
+/**
+ * Creates a new Dto class based on the given Zod schema.
+ *
+ * @param schema - The Zod schema to use for the Dto class.
+ */
 export function zodDto<T extends ZodSchema>(schema: T): ZodDto<T> {
   class Dto {
     static readonly [ZOD_DTO_SCHEMA] = schema;

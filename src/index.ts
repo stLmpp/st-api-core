@@ -1,4 +1,5 @@
 // Common
+export { arrayGroupToMap } from './common/array-group-to-map.js';
 export { arrayUniqBy } from './common/array-uniq-by.js';
 export { arrayUniqWith } from './common/array-uniq-with.js';
 export { coerceArray } from './common/coerce-array.js';
@@ -9,7 +10,6 @@ export {
   ParamDoubleSchema,
   ParamIntSchema,
 } from './common/common-schemas.js';
-export { arrayGroupToMap } from './common/array-group-to-map.js';
 export { isArray } from './common/is-array.js';
 export {
   safe,

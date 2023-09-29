@@ -6,6 +6,9 @@ import { generateSchema } from '../../common/generate-schema.js';
 
 import { getZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
 
+/**
+ * Decorator that applies parameter validation based on a ZodObject schema.
+ */
 export function Params(): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     const type = getZodDto(target, propertyKey!, parameterIndex);

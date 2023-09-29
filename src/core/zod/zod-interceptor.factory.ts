@@ -14,6 +14,8 @@ import { INVALID_RESPONSE } from '../exception/core-exceptions.js';
 export function zodInterceptorFactory(
   schema: ZodSchema,
 ): Class<NestInterceptor> {
+  // TODO change from Factory to Service
+
   @Injectable()
   class NestZodInterceptor implements NestInterceptor {
     intercept(

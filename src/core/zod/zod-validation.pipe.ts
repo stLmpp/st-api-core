@@ -11,6 +11,29 @@ import { ExceptionFactoryWithError } from '../exception/exception.type.js';
 
 import { isZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
 
+/**
+ * ZodValidationPipe is a class that implements the PipeTransform interface and is used to validate
+ * incoming data using a Zod schema.
+ *
+ * @remarks
+ * This class is used in NestJS applications to validate data sent through parameters, body, or query.
+ * It checks if the type of the parameter is supported and if the metadata type is a ZodDto class.
+ * If both conditions are true, it validates the value against the Zod schema and throws an exception
+ * if the validation fails.
+ *
+ * @example
+ * // Create a ZodDto class with a schema
+ * class CreateProductDto extends zodDto(z.object({
+ *   name: z.string().max(30),
+ *   price: z.number()
+ * })) {}
+ *
+ * // Use the ZodValidationPipe in a controller
+ * @Post('products')
+ * createProduct(@Body(new ZodValidationPipe()) createProductDto: CreateProductDto) {
+ *   // handle the createProductDto object
+ * }
+ */
 @Injectable()
 export class ZodValidationPipe implements PipeTransform {
   private readonly PARAM_TYPES: ReadonlySet<Paramtype> = new Set<Paramtype>([
