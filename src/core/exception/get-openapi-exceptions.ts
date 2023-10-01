@@ -15,7 +15,7 @@ const CORRELATION_ID_EXAMPLE = randomUUID();
 const EXCEPTION_OPENAPI_SCHEMA = generateSchema(ExceptionSchema);
 const CORE_EXCEPTIONS = Object.values(CoreExceptions);
 
-interface OpenapiException {
+export interface OpenapiException {
   status: number;
   description: string;
   content: {
