@@ -1,12 +1,13 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import { AdDevMode } from './ad-dev-mode.token.js';
 import { EnvironmentVariables } from './environment-variables.js';
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
 import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
 import { ZodValidationPipe } from './zod/zod-validation.pipe.js';
+import { ZodInterceptor } from './zod/zod.interceptor.js';
 
 @Module({})
 export class CoreModule {
@@ -14,6 +15,10 @@ export class CoreModule {
     return {
       module: CoreModule,
       providers: [
+        {
+          provide: APP_INTERCEPTOR,
+          useClass: ZodInterceptor,
+        },
         {
           provide: APP_PIPE,
           useClass: ZodValidationPipe,

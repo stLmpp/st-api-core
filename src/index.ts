@@ -1,4 +1,5 @@
 // Common
+export { arrayGroupToMap } from './common/array-group-to-map.js';
 export { arrayUniqBy } from './common/array-uniq-by.js';
 export { arrayUniqWith } from './common/array-uniq-with.js';
 export { coerceArray } from './common/coerce-array.js';
@@ -9,7 +10,6 @@ export {
   ParamDoubleSchema,
   ParamIntSchema,
 } from './common/common-schemas.js';
-export { arrayGroupToMap } from './common/array-group-to-map.js';
 export { isArray } from './common/is-array.js';
 export {
   safe,
@@ -58,8 +58,8 @@ export { Body } from './core/zod/body.decorator.js';
 export { Params } from './core/zod/params.decorator.js';
 export { QueryParams } from './core/zod/query-params.decorator.js';
 export { Response } from './core/zod/response.decorator.js';
+export { ZodInterceptor } from './core/zod/zod.interceptor.js';
 export { type ZodDto, zodDto } from './core/zod/zod-dto.js';
-export { zodInterceptorFactory } from './core/zod/zod-interceptor.factory.js';
 export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
 
 // Core

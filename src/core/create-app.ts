@@ -12,7 +12,9 @@ import express, { Express } from 'express';
 import { defineSecret } from 'firebase-functions/params';
 import { logger } from 'firebase-functions/v2';
 import helmet from 'helmet';
+import { OpenAPIObject } from 'openapi3-ts/oas30';
 
+import { addMissingExceptions } from './exception/add-missing-exceptions.js';
 import { internalStateMiddleware } from './internal-state.js';
 import { MainModule } from './main.module.js';
 
@@ -79,6 +81,7 @@ export async function createApp(options: CreateAppOptions): Promise<App> {
     .setVersion('1.0.0')
     .build();
   const document = SwaggerModule.createDocument(nestApp, config, {});
+  addMissingExceptions(document as OpenAPIObject);
   SwaggerModule.setup('help', nestApp, document, {
     swaggerOptions: {
       displayRequestDuration: true,
