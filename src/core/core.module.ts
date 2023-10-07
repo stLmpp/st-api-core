@@ -39,7 +39,7 @@ export class CoreModule {
           inject: [ConfigService],
           provide: AdDevMode,
           useFactory: (config: ConfigService) =>
-            config.get(EnvironmentVariables.NodeEnv) === 'true',
+            config.get(EnvironmentVariables.DevMode) === 'true',
         },
       ],
       imports: [ConfigModule],
