@@ -95,7 +95,7 @@ export async function createApp(options: CreateAppOptions): Promise<App> {
         const endPoint = url.pathname;
         const origin = location.origin;
         const path = location.pathname.replace(/\\/help$/, '');
-        request.url = origin + path + endPoint;
+        request.url = origin + path + endPoint + url.search;
         return request;
       }`,
   });
