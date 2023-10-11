@@ -68,7 +68,11 @@ export { AdDevMode } from './core/ad-dev-mode.token.js';
 export { CoreModule } from './core/core.module.js';
 export { EnvironmentVariables } from './core/environment-variables.js';
 export { createApi } from './core/create-api.js';
-export { getCorrelationId } from './core/internal-state.js';
+export {
+  getCorrelationId,
+  internalStateMiddleware,
+  createCorrelationId,
+} from './core/internal-state.js';
 export { NodeEnv } from './core/node-env.token.js';
 
 // Database
