@@ -41,7 +41,7 @@ function addMissingExceptionsToOperation(operation: OperationObject) {
  * It does mutate the document.
  * @return
  */
-export function addMissingExceptions(document: OpenAPIObject): void {
+export function addMissingExceptionsOpenapi(document: OpenAPIObject): void {
   for (const path of Object.values(document.paths)) {
     for (const method of METHODS_ARRAY) {
       const operation = path[method];

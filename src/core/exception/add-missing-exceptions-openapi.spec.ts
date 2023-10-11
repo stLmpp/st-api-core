@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 import { OpenAPIObject, ResponseObject } from 'openapi3-ts/oas30';
 
-import { addMissingExceptions } from './add-missing-exceptions.js';
+import { addMissingExceptionsOpenapi } from './add-missing-exceptions-openapi.js';
 import { OpenapiException } from './get-openapi-exceptions.js';
 
 vi.mock('./get-openapi-exceptions.js', async (importFunction) => {
@@ -29,7 +29,7 @@ vi.mock('./get-openapi-exceptions.js', async (importFunction) => {
   };
 });
 
-describe('add-missing-exceptions', () => {
+describe('add-missing-exceptions-openapi', () => {
   it('should add missing exceptions', () => {
     const document: OpenAPIObject = {
       info: {
@@ -45,7 +45,7 @@ describe('add-missing-exceptions', () => {
         },
       },
     };
-    addMissingExceptions(document);
+    addMissingExceptionsOpenapi(document);
     expect(document).toEqual({
       info: {
         title: '',

@@ -25,6 +25,7 @@ export {
 } from './common/zod-error-formatter.js';
 
 // Exceptions
+export { addMissingExceptionsOpenapi } from './core/exception/add-missing-exceptions-openapi.js';
 export {
   BAD_REQUEST_BODY,
   BAD_REQUEST_PARAMS,
