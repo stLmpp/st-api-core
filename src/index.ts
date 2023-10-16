@@ -62,6 +62,7 @@ export { Response } from './core/zod/response.decorator.js';
 export { ZodInterceptor } from './core/zod/zod.interceptor.js';
 export { type ZodDto, zodDto } from './core/zod/zod-dto.js';
 export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
+export { extendApi } from '@anatine/zod-openapi';
 
 // Core
 export { AdDevMode } from './core/ad-dev-mode.token.js';
