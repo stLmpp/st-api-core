@@ -1,4 +1,4 @@
-import { vitestConfig } from '@assis-delivery/config';
+import { vitestConfig } from '@st-api/config';
 import { InlineConfig } from 'vitest';
 import { defineConfig, mergeConfig } from 'vitest/config';
 

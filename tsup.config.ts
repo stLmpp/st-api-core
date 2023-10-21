@@ -1,4 +1,4 @@
-import { tsupConfig } from '@assis-delivery/config';
+import { tsupConfig } from '@st-api/config';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({

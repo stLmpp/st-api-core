@@ -1,4 +1,4 @@
-import { prettierConfig } from '@assis-delivery/config';
+import { prettierConfig } from '@st-api/config';
 
 export default {
   ...prettierConfig,

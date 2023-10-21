@@ -1,10 +1,9 @@
-import { DynamicModule, Module, Type } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import {DynamicModule, Module, Type} from '@nestjs/common';
+import {ConfigModule} from '@nestjs/config';
 
-import { CoreModule } from './core.module.js';
+import {CoreModule} from './core.module.js';
 
 export interface MainModuleOptions {
-  secrets: Record<string, string>;
   module: Type;
 }
 
@@ -14,9 +13,7 @@ export class MainModule {
     return {
       module: MainModule,
       imports: [
-        ConfigModule.forRoot({
-          load: [() => options.secrets],
-        }),
+        ConfigModule.forRoot(),
         CoreModule.forRoot(),
         options.module,
       ],

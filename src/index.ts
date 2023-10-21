@@ -10,6 +10,7 @@ export {
   ParamDoubleSchema,
   ParamIntSchema,
 } from './common/common-schemas.js';
+export { getClazz } from './common/get-clazz.js';
 export { isArray } from './common/is-array.js';
 export {
   safe,
@@ -65,38 +66,12 @@ export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
 export { extendApi } from '@anatine/zod-openapi';
 
 // Core
-export { AdDevMode } from './core/ad-dev-mode.token.js';
+export { StApiDevMode } from './core/st-api-dev-mode.token.js';
 export { CoreModule } from './core/core.module.js';
 export { EnvironmentVariables } from './core/environment-variables.js';
-export { createApi } from './core/create-api.js';
 export {
   getCorrelationId,
   internalStateMiddleware,
   createCorrelationId,
 } from './core/internal-state.js';
 export { NodeEnv } from './core/node-env.token.js';
-
-// Database
-export {
-  Drizzle,
-  type DrizzleOrmModuleOptions,
-  DrizzleOrmModule,
-} from './database/drizzle-orm.module.js';
-
-// Firebase
-export { FirebaseModule } from './firebase/firebase.module.js';
-export {
-  type FirebaseAdminAsyncOptionsType,
-  type FirebaseAdminModuleOptions,
-  type FirebaseAdminOptionsType,
-} from './firebase/firebase-admin.config.js';
-export { FirebaseAdminModule } from './firebase/firebase-admin.module.js';
-export { FirebaseAdminApp } from './firebase/firebase-admin-app.js';
-export { FirebaseAdminAuth } from './firebase/firebase-admin-auth.js';
-export { FirebaseAdminFirestore } from './firebase/firebase-admin-firestore.js';
-export { FirebaseApp } from './firebase/firebase-app.js';
-export { FirebaseAuth } from './firebase/firebase-auth.js';
-export {
-  FirestoreThrottler,
-  FirestoreThrottlerCollectionNameToken,
-} from './firebase/firestore-throttler.js';

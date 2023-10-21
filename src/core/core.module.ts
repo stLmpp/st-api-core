@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
-import { AdDevMode } from './ad-dev-mode.token.js';
+import { StApiDevMode } from './st-api-dev-mode.token.js';
 import { EnvironmentVariables } from './environment-variables.js';
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
 import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
@@ -37,7 +37,7 @@ export class CoreModule {
         },
         {
           inject: [ConfigService],
-          provide: AdDevMode,
+          provide: StApiDevMode,
           useFactory: (config: ConfigService) =>
             config.get(EnvironmentVariables.DevMode) === 'true',
         },
