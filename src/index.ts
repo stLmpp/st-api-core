@@ -66,8 +66,12 @@ export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
 export { extendApi } from '@anatine/zod-openapi';
 
 // Core
-export { StApiDevMode } from './core/st-api-dev-mode.token.js';
 export { CoreModule } from './core/core.module.js';
+export {
+  type App,
+  createApp,
+  type CreateAppOptions,
+} from './core/create-app.js';
 export { EnvironmentVariables } from './core/environment-variables.js';
 export {
   getCorrelationId,
@@ -75,3 +79,4 @@ export {
   createCorrelationId,
 } from './core/internal-state.js';
 export { NodeEnv } from './core/node-env.token.js';
+export { StApiDevMode } from './core/st-api-dev-mode.token.js';
