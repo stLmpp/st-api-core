@@ -1,11 +1,11 @@
 import {
-  CallHandler,
-  ExecutionContext,
+  type CallHandler,
+  type ExecutionContext,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable, switchMap } from 'rxjs';
+import { type Observable, switchMap } from 'rxjs';
 import { ZodSchema } from 'zod';
 
 import { formatZodErrorString } from '../../common/zod-error-formatter.js';
@@ -13,7 +13,7 @@ import { INVALID_RESPONSE } from '../exception/core-exceptions.js';
 import { RESPONSE_SCHEMA_METADATA } from '../metadata.js';
 
 @Injectable()
-export class ZodInterceptor implements NestInterceptor {
+export class ZInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {

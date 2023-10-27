@@ -1,14 +1,14 @@
 import {
-  ArgumentsHost,
+  type ArgumentsHost,
   Catch,
-  ExceptionFilter,
+  type ExceptionFilter,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import type { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { HttpAdapterHost } from '@nestjs/core';
-import { Request } from 'express';
-import { Class } from 'type-fest';
+import type { Request } from 'express';
+import type { Class } from 'type-fest';
 
 import {
   ROUTE_NOT_FOUND,

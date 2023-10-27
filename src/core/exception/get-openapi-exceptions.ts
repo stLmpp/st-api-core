@@ -1,14 +1,14 @@
 import { randomUUID } from 'node:crypto';
 
 import { getReasonPhrase } from 'http-status-codes';
-import { ExamplesObject } from 'openapi3-ts/oas31';
+import type { ExamplesObject } from 'openapi3-ts/oas31';
 
 import { arrayUniqBy } from '../../common/array-uniq-by.js';
 import { generateSchema } from '../../common/generate-schema.js';
 
 import * as CoreExceptions from './core-exceptions.js';
 import { Exception } from './exception.js';
-import { ExceptionFactory } from './exception.type.js';
+import type { ExceptionFactory } from './exception.type.js';
 import { ExceptionSchema } from './exceptions.schema.js';
 
 const CORRELATION_ID_EXAMPLE = randomUUID();

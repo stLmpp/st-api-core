@@ -1,5 +1,9 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
-import { Paramtype } from '@nestjs/common/interfaces/features/paramtype.interface.js';
+import {
+  type ArgumentMetadata,
+  Injectable,
+  type PipeTransform,
+} from '@nestjs/common';
+import { type Paramtype } from '@nestjs/common/interfaces/features/paramtype.interface.js';
 
 import { formatZodErrorString } from '../../common/zod-error-formatter.js';
 import {
@@ -7,42 +11,42 @@ import {
   BAD_REQUEST_PARAMS,
   BAD_REQUEST_QUERY,
 } from '../exception/core-exceptions.js';
-import { ExceptionFactoryWithError } from '../exception/exception.type.js';
+import type { ExceptionFactoryWithError } from '../exception/exception.type.js';
 
-import { isZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
+import { isZDto, Z_DTO_SCHEMA } from './z-dto.js';
 
 /**
- * ZodValidationPipe is a class that implements the PipeTransform interface and is used to validate
+ * ZValidationPipe is a class that implements the PipeTransform interface and is used to validate
  * incoming data using a Zod schema.
  *
  * @remarks
  * This class is used in NestJS applications to validate data sent through parameters, body, or query.
- * It checks if the type of the parameter is supported and if the metadata type is a ZodDto class.
+ * It checks if the type of the parameter is supported and if the metadata type is a ZDto class.
  * If both conditions are true, it validates the value against the Zod schema and throws an exception
  * if the validation fails.
  *
  * @example
- * // Create a ZodDto class with a schema
- * class CreateProductDto extends zodDto(z.object({
+ * // Create a ZDto class with a schema
+ * class CreateProductDto extends zDto(z.object({
  *   name: z.string().max(30),
  *   price: z.number()
  * })) {}
  *
- * // Use the ZodValidationPipe in a controller
+ * // Use the ZValidationPipe in a controller
  * @Post('products')
- * createProduct(@Body(new ZodValidationPipe()) createProductDto: CreateProductDto) {
+ * createProduct(@Body(new ZValidationPipe()) createProductDto: CreateProductDto) {
  *   // handle the createProductDto object
  * }
  */
 @Injectable()
-export class ZodValidationPipe implements PipeTransform {
+export class ZValidationPipe implements PipeTransform {
   private readonly PARAM_TYPES: ReadonlySet<Paramtype> = new Set<Paramtype>([
     'param',
     'body',
     'query',
   ]);
 
-  private readonly NEST_ZOD_PIPE_EXCEPTIONS: Record<
+  private readonly NEST_Z_PIPE_EXCEPTIONS: Record<
     Exclude<Paramtype, 'custom'>,
     ExceptionFactoryWithError
   > = {
@@ -61,13 +65,13 @@ export class ZodValidationPipe implements PipeTransform {
     value: unknown,
     { type, metatype }: ArgumentMetadata,
   ): Promise<unknown> {
-    if (!this.isParamTypeSupported(type) || !isZodDto(metatype)) {
+    if (!this.isParamTypeSupported(type) || !isZDto(metatype)) {
       return value;
     }
-    const schema = metatype[ZOD_DTO_SCHEMA];
+    const schema = metatype[Z_DTO_SCHEMA];
     const parsed = await schema.safeParseAsync(value);
     if (!parsed.success) {
-      const exceptionFactory = this.NEST_ZOD_PIPE_EXCEPTIONS[type];
+      const exceptionFactory = this.NEST_Z_PIPE_EXCEPTIONS[type];
       throw exceptionFactory(formatZodErrorString(parsed.error));
     }
     return parsed.data;

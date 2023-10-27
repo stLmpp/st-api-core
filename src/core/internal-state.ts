@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { randomUUID } from 'node:crypto';
 
-import { RequestHandler } from 'express';
+import type { RequestHandler } from 'express';
 
 export interface InternalState {
   correlationId: string;

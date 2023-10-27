@@ -14,10 +14,10 @@ export { getClazz } from './common/get-clazz.js';
 export { isArray } from './common/is-array.js';
 export {
   safe,
-  type SafeAsync,
-  type SafeAsyncError,
+  type Safe,
+  type SafeError,
   safeAsync,
-  type SafeAsyncSuccess,
+  type SafeSuccess,
 } from './common/safe.js';
 export {
   formatZodErrorString,
@@ -56,22 +56,21 @@ export {
 export { ThrottlerOptionsToken } from './core/throttler/throttler-options.token.js';
 
 // Zod
-export { Body } from './core/zod/body.decorator.js';
-export { Params } from './core/zod/params.decorator.js';
-export { QueryParams } from './core/zod/query-params.decorator.js';
-export { Response } from './core/zod/response.decorator.js';
-export { ZodInterceptor } from './core/zod/zod.interceptor.js';
-export { type ZodDto, zodDto } from './core/zod/zod-dto.js';
-export { ZodValidationPipe } from './core/zod/zod-validation.pipe.js';
+export { ZBody } from './core/z/z-body.decorator.js';
+export { ZParams } from './core/z/z-params.decorator.js';
+export { ZQuery } from './core/z/z-query.decorator.js';
+export { ZRes } from './core/z/z-res.decorator.js';
+export { ZInterceptor } from './core/z/z.interceptor.js';
+export { type ZDto, zDto } from './core/z/z-dto.js';
+export { ZValidationPipe } from './core/z/z-validation-pipe.service.js';
 export { extendApi } from '@anatine/zod-openapi';
 
 // Core
 export { CoreModule } from './core/core.module.js';
 export {
-  type App,
-  createApp,
-  type CreateAppOptions,
-} from './core/create-app.js';
+  type ConfigureAppOptions,
+  configureApp,
+} from './core/configure-app.js';
 export { EnvironmentVariables } from './core/environment-variables.js';
 export {
   getCorrelationId,

@@ -1,18 +1,18 @@
 import { Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { ZodObject, ZodType } from 'zod';
+import { ZodObject, type ZodType } from 'zod';
 
 import { generateSchema } from '../../common/generate-schema.js';
 
-import { getZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
+import { getZDto, Z_DTO_SCHEMA } from './z-dto.js';
 
 /**
  * Decorator for query parameters.
  */
-export function QueryParams(): ParameterDecorator {
+export function ZQuery(): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    const type = getZodDto(target, propertyKey!, parameterIndex);
-    const schema = type[ZOD_DTO_SCHEMA];
+    const type = getZDto(target, propertyKey!, parameterIndex);
+    const schema = type[Z_DTO_SCHEMA];
     if (!(schema instanceof ZodObject)) {
       throw new TypeError(
         `${type.name} cannot be used in the QueryParams decorator because it's not a ZodObject`,

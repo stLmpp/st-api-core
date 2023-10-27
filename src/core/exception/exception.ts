@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, type HttpStatus } from '@nestjs/common';
 import { getReasonPhrase } from 'http-status-codes';
-import { SetOptional } from 'type-fest';
+import type { SetOptional } from 'type-fest';
 
 import { safe } from '../../common/safe.js';
 import { getCorrelationId } from '../internal-state.js';
 
-import {
+import type {
   ExceptionArgs,
   ExceptionFactory,
   ExceptionFactoryWithError,

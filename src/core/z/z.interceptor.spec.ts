@@ -7,10 +7,10 @@ import { z } from 'zod';
 
 import { INVALID_RESPONSE } from '../exception/core-exceptions.js';
 
-import { ZodInterceptor } from './zod.interceptor.js';
+import { ZInterceptor } from './z.interceptor.js';
 
-describe('zod.interceptor', () => {
-  let interceptor: ZodInterceptor;
+describe('z.interceptor', () => {
+  let interceptor: ZInterceptor;
 
   const reflectorMock = mock<Reflector>({
     get: vi.fn(),
@@ -19,14 +19,14 @@ describe('zod.interceptor', () => {
   beforeEach(async () => {
     const ref = await Test.createTestingModule({
       providers: [
-        ZodInterceptor,
+        ZInterceptor,
         {
           provide: Reflector,
           useFactory: () => reflectorMock,
         },
       ],
     }).compile();
-    interceptor = ref.get(ZodInterceptor);
+    interceptor = ref.get(ZInterceptor);
   });
 
   it('should create instance', () => {

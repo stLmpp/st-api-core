@@ -1,10 +1,10 @@
-export type SafeAsyncSuccess<T> = [error: undefined, data: T];
-export type SafeAsyncError = [error: Error, data: undefined];
-export type SafeAsync<T> = SafeAsyncSuccess<T> | SafeAsyncError;
+export type SafeSuccess<T> = [error: undefined, data: T];
+export type SafeError = [error: Error, data: undefined];
+export type Safe<T> = SafeSuccess<T> | SafeError;
 
 export async function safeAsync<T>(
   callback: () => Promise<T>,
-): Promise<SafeAsync<T>> {
+): Promise<Safe<T>> {
   try {
     return [undefined, await callback()];
   } catch (error) {
@@ -15,7 +15,7 @@ export async function safeAsync<T>(
   }
 }
 
-export function safe<T>(callback: () => T): SafeAsync<T> {
+export function safe<T>(callback: () => T): Safe<T> {
   try {
     return [undefined, callback()];
   } catch (error) {

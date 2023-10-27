@@ -6,8 +6,8 @@ import { StApiDevMode } from './st-api-dev-mode.token.js';
 import { EnvironmentVariables } from './environment-variables.js';
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
 import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
-import { ZodValidationPipe } from './zod/zod-validation.pipe.js';
-import { ZodInterceptor } from './zod/zod.interceptor.js';
+import { ZValidationPipe } from './z/z-validation-pipe.service.js';
+import { ZInterceptor } from './z/z.interceptor.js';
 
 @Module({})
 export class CoreModule {
@@ -17,11 +17,11 @@ export class CoreModule {
       providers: [
         {
           provide: APP_INTERCEPTOR,
-          useClass: ZodInterceptor,
+          useClass: ZInterceptor,
         },
         {
           provide: APP_PIPE,
-          useClass: ZodValidationPipe,
+          useClass: ZValidationPipe,
         },
         {
           provide: APP_FILTER,

@@ -1,14 +1,13 @@
 import { z, ZodSchema } from 'zod';
 
-export const ZOD_DTO_SCHEMA = Symbol('Zod Dto Schema');
+export const Z_DTO_SCHEMA = Symbol('Zod Dto Schema');
 
-export interface ZodDto<T extends ZodSchema = ZodSchema> {
+export interface ZDto<T extends ZodSchema = ZodSchema> {
   new (): z.infer<T>;
 }
 
-export interface ZodDtoInternal<T extends ZodSchema = ZodSchema>
-  extends ZodDto<T> {
-  readonly [ZOD_DTO_SCHEMA]: T;
+export interface ZDtoInternal<T extends ZodSchema = ZodSchema> extends ZDto<T> {
+  readonly [Z_DTO_SCHEMA]: T;
 }
 
 /**
@@ -16,31 +15,31 @@ export interface ZodDtoInternal<T extends ZodSchema = ZodSchema>
  *
  * @param schema - The Zod schema to use for the Dto class.
  */
-export function zodDto<T extends ZodSchema>(schema: T): ZodDto<T> {
+export function zDto<T extends ZodSchema>(schema: T): ZDto<T> {
   class Dto {
-    static readonly [ZOD_DTO_SCHEMA] = schema;
+    static readonly [Z_DTO_SCHEMA] = schema;
   }
   return Dto;
 }
 
-export function isZodDto(value: unknown): value is ZodDtoInternal {
+export function isZDto(value: unknown): value is ZDtoInternal {
   return (
     !!value &&
     typeof value === 'function' &&
-    ZOD_DTO_SCHEMA in value &&
-    value[ZOD_DTO_SCHEMA] instanceof ZodSchema
+    Z_DTO_SCHEMA in value &&
+    value[Z_DTO_SCHEMA] instanceof ZodSchema
   );
 }
 
-export function getZodDto(
+export function getZDto(
   target: NonNullable<unknown>,
   propertyKey: string | symbol,
   parameterIndex: number,
-): ZodDtoInternal {
+): ZDtoInternal {
   const type = Reflect.getMetadata('design:paramtypes', target, propertyKey)?.[
     parameterIndex
   ];
-  if (!isZodDto(type)) {
+  if (!isZDto(type)) {
     throw new Error(`${type?.name} is not a ZodDto`);
   }
   return type;

@@ -5,18 +5,18 @@ import { z } from 'zod';
 
 import { BAD_REQUEST_BODY } from '../exception/core-exceptions.js';
 
-import { zodDto } from './zod-dto.js';
-import { ZodValidationPipe } from './zod-validation.pipe.js';
+import { zDto } from './z-dto.js';
+import { ZValidationPipe } from './z-validation-pipe.service.js';
 
-describe('zod-validation.pipe', () => {
-  let pipe: ZodValidationPipe;
+describe('z-validation.pipe', () => {
+  let pipe: ZValidationPipe;
 
   beforeEach(async () => {
     vi.resetAllMocks();
     const ref = await Test.createTestingModule({
-      providers: [ZodValidationPipe],
+      providers: [ZValidationPipe],
     }).compile();
-    pipe = ref.get(ZodValidationPipe);
+    pipe = ref.get(ZValidationPipe);
   });
 
   it('should create instance', () => {
@@ -33,7 +33,7 @@ describe('zod-validation.pipe', () => {
     expect(transformed).toBe(value);
   });
 
-  it('should not transform if metatype is not a ZodDto', async () => {
+  it('should not transform if metatype is not a ZDto', async () => {
     const meta = mock<ArgumentMetadata>({
       type: 'body',
       metatype: class {},
@@ -44,7 +44,7 @@ describe('zod-validation.pipe', () => {
   });
 
   it('should throw error if validation parsing fails', async () => {
-    class Dto extends zodDto(z.object({ id: z.number() })) {}
+    class Dto extends zDto(z.object({ id: z.number() })) {}
     const meta = mock<ArgumentMetadata>({
       type: 'body',
       metatype: Dto,
@@ -56,7 +56,7 @@ describe('zod-validation.pipe', () => {
   });
 
   it('should return parsed data', async () => {
-    class Dto extends zodDto(z.object({ id: z.string().transform(Number) })) {}
+    class Dto extends zDto(z.object({ id: z.string().transform(Number) })) {}
     const meta = mock<ArgumentMetadata>({
       type: 'body',
       metatype: Dto,

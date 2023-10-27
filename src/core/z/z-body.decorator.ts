@@ -1,9 +1,9 @@
-import { Body as NestBody } from '@nestjs/common';
+import { Body } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 
 import { generateSchema } from '../../common/generate-schema.js';
 
-import { getZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
+import { getZDto, Z_DTO_SCHEMA } from './z-dto.js';
 
 /**
  * Decorator to specify the request body type for a method.
@@ -20,8 +20,8 @@ import { getZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
  * ```
  * class UserController {
  *   @Post('/')
- *   @Body()
- *   createUser(@Body() createUserDto: CreateUserDto) {
+ *   @ZBody()
+ *   createUser(@ZBody() createUserDto: CreateUserDto) {
  *     // implementation here
  *   }
  * }
@@ -30,12 +30,12 @@ import { getZodDto, ZOD_DTO_SCHEMA } from './zod-dto.js';
  * @see [NestBody](https://docs.nestjs.com/controllers#body)
  * @see [ApiBody](https://docs.nestjs/swagger/modules#api-body)
  */
-export function Body(): ParameterDecorator {
+export function ZBody(): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    const type = getZodDto(target, propertyKey!, parameterIndex);
-    NestBody()(target, propertyKey, parameterIndex);
+    const type = getZDto(target, propertyKey!, parameterIndex);
+    Body()(target, propertyKey, parameterIndex);
     ApiBody({
-      schema: generateSchema(type[ZOD_DTO_SCHEMA]),
+      schema: generateSchema(type[Z_DTO_SCHEMA]),
     })(
       target,
       propertyKey!,

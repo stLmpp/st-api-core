@@ -1,6 +1,6 @@
 import { ApiResponse } from '@nestjs/swagger';
 
-import { ExceptionFactory } from './exception.type.js';
+import type { ExceptionFactory } from './exception.type.js';
 import { getOpenapiExceptions } from './get-openapi-exceptions.js';
 
 export function Exceptions(factories: ExceptionFactory[]): MethodDecorator {
