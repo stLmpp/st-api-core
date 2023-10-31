@@ -5,6 +5,7 @@ import { ZodObject, ZodSchema, type ZodType } from 'zod';
 import { generateSchema } from '../../common/generate-schema.js';
 
 import { getZDtoSchema } from './z-dto.js';
+import { ZValidationPipe } from './z-validation.pipe.js';
 
 /**
  * Decorator that applies parameter validation based on a ZodObject schema.
@@ -18,7 +19,11 @@ export function ZParams(schema?: ZodSchema): ParameterDecorator {
       );
     }
     const schemaObject: ZodObject<Record<string, ZodType>> = schema;
-    Param()(target, propertyKey, parameterIndex);
+    Param(new ZValidationPipe(schemaObject))(
+      target,
+      propertyKey,
+      parameterIndex,
+    );
     const descriptor = Reflect.getOwnPropertyDescriptor(target, propertyKey!);
     for (const [key, value] of Object.entries(schemaObject.shape)) {
       ApiParam({

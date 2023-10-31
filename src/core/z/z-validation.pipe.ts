@@ -4,6 +4,7 @@ import {
   type PipeTransform,
 } from '@nestjs/common';
 import { type Paramtype } from '@nestjs/common/interfaces/features/paramtype.interface.js';
+import { ZodSchema } from 'zod';
 
 import { formatZodErrorString } from '../../common/zod-error-formatter.js';
 import {
@@ -13,33 +14,10 @@ import {
 } from '../exception/core-exceptions.js';
 import type { ExceptionFactoryWithError } from '../exception/exception.type.js';
 
-import { isZDto, Z_DTO_SCHEMA } from './z-dto.js';
-
-/**
- * ZValidationPipe is a class that implements the PipeTransform interface and is used to validate
- * incoming data using a Zod schema.
- *
- * @remarks
- * This class is used in NestJS applications to validate data sent through parameters, body, or query.
- * It checks if the type of the parameter is supported and if the metadata type is a ZDto class.
- * If both conditions are true, it validates the value against the Zod schema and throws an exception
- * if the validation fails.
- *
- * @example
- * // Create a ZDto class with a schema
- * class CreateProductDto extends zDto(z.object({
- *   name: z.string().max(30),
- *   price: z.number()
- * })) {}
- *
- * // Use the ZValidationPipe in a controller
- * @Post('products')
- * createProduct(@Body(new ZValidationPipe()) createProductDto: CreateProductDto) {
- *   // handle the createProductDto object
- * }
- */
 @Injectable()
 export class ZValidationPipe implements PipeTransform {
+  constructor(private readonly schema: ZodSchema) {}
+
   private readonly PARAM_TYPES: ReadonlySet<Paramtype> = new Set<Paramtype>([
     'param',
     'body',
@@ -63,13 +41,12 @@ export class ZValidationPipe implements PipeTransform {
 
   async transform(
     value: unknown,
-    { type, metatype }: ArgumentMetadata,
+    { type }: ArgumentMetadata,
   ): Promise<unknown> {
-    if (!this.isParamTypeSupported(type) || !isZDto(metatype)) {
+    if (!this.isParamTypeSupported(type)) {
       return value;
     }
-    const schema = metatype[Z_DTO_SCHEMA];
-    const parsed = await schema.safeParseAsync(value);
+    const parsed = await this.schema.safeParseAsync(value);
     if (!parsed.success) {
       const exceptionFactory = this.NEST_Z_PIPE_EXCEPTIONS[type];
       throw exceptionFactory(formatZodErrorString(parsed.error));

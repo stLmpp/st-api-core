@@ -5,6 +5,7 @@ import { ZodSchema } from 'zod';
 import { generateSchema } from '../../common/generate-schema.js';
 
 import { getZDtoSchema } from './z-dto.js';
+import { ZValidationPipe } from './z-validation.pipe.js';
 
 /**
  * Decorator to specify the request body type for a method.
@@ -34,7 +35,7 @@ import { getZDtoSchema } from './z-dto.js';
 export function ZBody(schema?: ZodSchema): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     schema ??= getZDtoSchema(target, propertyKey!, parameterIndex);
-    Body()(target, propertyKey, parameterIndex);
+    Body(new ZValidationPipe(schema))(target, propertyKey, parameterIndex);
     ApiBody({
       schema: generateSchema(schema),
     })(
