@@ -1,21 +1,20 @@
 import { Param } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
-import { ZodObject, type ZodType } from 'zod';
+import { ZodObject, ZodSchema, type ZodType } from 'zod';
 
 import { generateSchema } from '../../common/generate-schema.js';
 
-import { getZDto, Z_DTO_SCHEMA } from './z-dto.js';
+import { getZDtoSchema } from './z-dto.js';
 
 /**
  * Decorator that applies parameter validation based on a ZodObject schema.
  */
-export function ZParams(): ParameterDecorator {
+export function ZParams(schema?: ZodSchema): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    const type = getZDto(target, propertyKey!, parameterIndex);
-    const schema = type[Z_DTO_SCHEMA];
+    schema ??= getZDtoSchema(target, propertyKey!, parameterIndex);
     if (!(schema instanceof ZodObject)) {
       throw new TypeError(
-        `${type.name} cannot be used in the Params decorator because it's not a ZodObject`,
+        'Only ZodObject can be used in the ZParams decorator',
       );
     }
     const schemaObject: ZodObject<Record<string, ZodType>> = schema;

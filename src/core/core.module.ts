@@ -2,11 +2,11 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
-import { StApiDevMode } from './st-api-dev-mode.token.js';
 import { EnvironmentVariables } from './environment-variables.js';
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
 import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
-import { ZValidationPipe } from './z/z-validation-pipe.service.js';
+import { StApiDevMode } from './st-api-dev-mode.token.js';
+import { ZValidationPipe } from './z/z-validation.pipe.js';
 import { ZInterceptor } from './z/z.interceptor.js';
 
 @Module({})

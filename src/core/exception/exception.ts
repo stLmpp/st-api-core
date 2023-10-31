@@ -3,7 +3,7 @@ import { getReasonPhrase } from 'http-status-codes';
 import type { SetOptional } from 'type-fest';
 
 import { safe } from '../../common/safe.js';
-import { getCorrelationId } from '../internal-state.js';
+import { getCorrelationId } from '../internal-state/internal-state.js';
 
 import type {
   ExceptionArgs,

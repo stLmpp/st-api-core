@@ -1,10 +1,11 @@
 import { type INestApplication, VersioningType } from '@nestjs/common';
-import { internalStateMiddleware } from './internal-state.js';
-import helmet from 'helmet';
-import compression from 'compression';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import compression from 'compression';
+import helmet from 'helmet';
 import { type OpenAPIObject } from 'openapi3-ts/oas30';
+
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
+import { internalStateMiddleware } from './internal-state/internal-state.js';
 
 export interface ConfigureAppOptions {
   swagger?: {

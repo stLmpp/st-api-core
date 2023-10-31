@@ -1,9 +1,10 @@
 import { Body } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
+import { ZodSchema } from 'zod';
 
 import { generateSchema } from '../../common/generate-schema.js';
 
-import { getZDto, Z_DTO_SCHEMA } from './z-dto.js';
+import { getZDtoSchema } from './z-dto.js';
 
 /**
  * Decorator to specify the request body type for a method.
@@ -30,12 +31,12 @@ import { getZDto, Z_DTO_SCHEMA } from './z-dto.js';
  * @see [NestBody](https://docs.nestjs.com/controllers#body)
  * @see [ApiBody](https://docs.nestjs/swagger/modules#api-body)
  */
-export function ZBody(): ParameterDecorator {
+export function ZBody(schema?: ZodSchema): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    const type = getZDto(target, propertyKey!, parameterIndex);
+    schema ??= getZDtoSchema(target, propertyKey!, parameterIndex);
     Body()(target, propertyKey, parameterIndex);
     ApiBody({
-      schema: generateSchema(type[Z_DTO_SCHEMA]),
+      schema: generateSchema(schema),
     })(
       target,
       propertyKey!,

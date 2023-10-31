@@ -62,7 +62,7 @@ export { ZQuery } from './core/z/z-query.decorator.js';
 export { ZRes } from './core/z/z-res.decorator.js';
 export { ZInterceptor } from './core/z/z.interceptor.js';
 export { type ZDto, zDto } from './core/z/z-dto.js';
-export { ZValidationPipe } from './core/z/z-validation-pipe.service.js';
+export { ZValidationPipe } from './core/z/z-validation.pipe.js';
 export { extendApi } from '@anatine/zod-openapi';
 
 // Core
@@ -72,10 +72,11 @@ export {
   configureApp,
 } from './core/configure-app.js';
 export { EnvironmentVariables } from './core/environment-variables.js';
+export { NodeEnv } from './core/node-env.token.js';
 export {
   getCorrelationId,
   internalStateMiddleware,
   createCorrelationId,
-} from './core/internal-state.js';
-export { NodeEnv } from './core/node-env.token.js';
+} from './core/internal-state/internal-state.js';
+export { CID } from './core/internal-state/cid.decorator.js';
 export { StApiDevMode } from './core/st-api-dev-mode.token.js';

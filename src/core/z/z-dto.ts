@@ -44,3 +44,11 @@ export function getZDto(
   }
   return type;
 }
+
+export function getZDtoSchema(
+  target: NonNullable<unknown>,
+  propertyKey: string | symbol,
+  parameterIndex: number,
+): ZodSchema {
+  return getZDto(target, propertyKey, parameterIndex)[Z_DTO_SCHEMA];
+}

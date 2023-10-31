@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { BAD_REQUEST_BODY } from '../exception/core-exceptions.js';
 
 import { zDto } from './z-dto.js';
-import { ZValidationPipe } from './z-validation-pipe.service.js';
+import { ZValidationPipe } from './z-validation.pipe.js';
 
 describe('z-validation.pipe', () => {
   let pipe: ZValidationPipe;
