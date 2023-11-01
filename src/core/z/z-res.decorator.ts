@@ -1,7 +1,9 @@
 // eslint-disable-next-line unicorn/prevent-abbreviations
 import { HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
-import { z, ZodSchema } from 'zod';
+import { ApiResponseOptions } from '@nestjs/swagger/dist/decorators/api-response.decorator.js';
+import { getReasonPhrase } from 'http-status-codes';
+import { z, ZodSchema, ZodVoid } from 'zod';
 
 import { coerceArray } from '../../common/coerce-array.js';
 import { generateSchema } from '../../common/generate-schema.js';
@@ -30,28 +32,33 @@ function getSchemaFromZDto(dto: ZDto): ZodSchema {
  */
 // eslint-disable-next-line unicorn/prevent-abbreviations
 export function ZRes<T extends ZodSchema>(
-  dto?: ZDto<T> | ZDto<T>[] | ZodSchema,
+  dto: ZDto<T> | [ZDto<T>] | ZodSchema = z.void(),
   status = HttpStatus.OK,
 ): MethodDecorator {
   return (target, propertyKey, descriptor: TypedPropertyDescriptor<any>) => {
-    dto ??= z.void();
     const isArray = Array.isArray(dto);
     const [single] = coerceArray(dto);
+    const isZodSchema = single instanceof ZodSchema;
     // non-null assertion is safe here, because coerceArray
     // will always return an array with at least one item
-    const singleSchema =
-      single instanceof ZodSchema ? single : getSchemaFromZDto(single!);
+    const singleSchema = isZodSchema ? single : getSchemaFromZDto(single!);
     const schema = isArray ? z.array(singleSchema) : singleSchema;
+
     Reflect.defineMetadata(RESPONSE_SCHEMA_METADATA, schema, descriptor.value);
-    HttpCode(status)(target, propertyKey, descriptor);
-    ApiResponse({
-      content: {
+
+    const apiResponseOptions: ApiResponseOptions = {
+      description: getReasonPhrase(status),
+      status,
+    };
+    const isVoidSchema = singleSchema instanceof ZodVoid;
+    if (!isVoidSchema) {
+      apiResponseOptions.content = {
         'application/json': {
           schema: generateSchema(schema, true),
         },
-      },
-      status,
-      isArray,
-    })(target, propertyKey, descriptor);
+      };
+    }
+    HttpCode(status)(target, propertyKey, descriptor);
+    ApiResponse(apiResponseOptions)(target, propertyKey, descriptor);
   };
 }
