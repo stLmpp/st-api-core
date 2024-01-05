@@ -72,7 +72,7 @@ export {
   configureApp,
 } from './core/configure-app.js';
 export { EnvironmentVariables } from './core/environment-variables.js';
-export { NodeEnv } from './core/node-env.token.js';
+export { NodeEnv, NodeEnvEnum } from './core/node-env.token.js';
 export {
   getCorrelationId,
   internalStateMiddleware,
