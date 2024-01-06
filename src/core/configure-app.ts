@@ -4,8 +4,8 @@ import compression from 'compression';
 import helmet from 'helmet';
 import { type OpenAPIObject } from 'openapi3-ts/oas30';
 
+import { apiStateMiddleware } from './api-state/api-state.js';
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
-import { internalStateMiddleware } from './internal-state/internal-state.js';
 
 export interface ConfigureAppOptions {
   swagger?: {
@@ -29,7 +29,7 @@ export function configureApp(
 ): INestApplication {
   app
     .use(
-      internalStateMiddleware(),
+      apiStateMiddleware(),
       helmet({
         contentSecurityPolicy: false,
       }),

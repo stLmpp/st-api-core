@@ -27,7 +27,7 @@ function getSchemaFromZDto(dto: ZDto): ZodSchema {
 /**
  * Decorator that adds response information to a method.
  *
- * @param [dto] - The data transfer object schema or array of schemas. Defaults to void schema.
+ * @param [dto] - The data transfer object schema or array of schemas. Default to void schema.
  * @param [status=HttpStatus.OK] - The HTTP status code.
  */
 // eslint-disable-next-line unicorn/prevent-abbreviations

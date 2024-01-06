@@ -75,8 +75,11 @@ export { EnvironmentVariables } from './core/environment-variables.js';
 export { NodeEnv, NodeEnvEnum } from './core/node-env.token.js';
 export {
   getCorrelationId,
-  internalStateMiddleware,
+  apiStateMiddleware,
   createCorrelationId,
-} from './core/internal-state/internal-state.js';
-export { CID } from './core/internal-state/cid.decorator.js';
+  apiStateRunInContext,
+  getStateKey,
+  type ApiState,
+} from './core/api-state/api-state.js';
+export { CID } from './core/api-state/cid.decorator.js';
 export { StApiDevMode } from './core/st-api-dev-mode.token.js';
