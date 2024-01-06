@@ -79,6 +79,7 @@ export {
   createCorrelationId,
   apiStateRunInContext,
   getStateKey,
+  getState,
   type ApiState,
 } from './core/api-state/api-state.js';
 export { CID } from './core/api-state/cid.decorator.js';

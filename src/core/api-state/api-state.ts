@@ -37,6 +37,7 @@ export function apiStateRunInContext<T>(
   partialState: Partial<ApiState> = {},
 ): Promise<T> | T {
   const initialState: ApiState = {
+    ...partialState,
     correlationId: partialState.correlationId ?? createCorrelationId(),
   };
   return ASYNC_LOCAL_STORAGE.run(initialState, run);
