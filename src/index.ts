@@ -80,7 +80,9 @@ export {
   apiStateRunInContext,
   getStateKey,
   getState,
+  getTraceId,
   type ApiState,
+  type ApiStateMiddlewareOptions,
 } from './core/api-state/api-state.js';
 export { CID } from './core/api-state/cid.decorator.js';
 export { StApiDevMode } from './core/st-api-dev-mode.token.js';

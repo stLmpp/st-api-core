@@ -1,6 +1,7 @@
 import { type INestApplication, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
+import { type Request } from 'express';
 import helmet from 'helmet';
 import { type OpenAPIObject } from 'openapi3-ts/oas30';
 
@@ -13,6 +14,8 @@ export interface ConfigureAppOptions {
     route?: string;
     documentFactory?: (document: OpenAPIObject) => OpenAPIObject;
   };
+  getTraceId?: (request: Request) => string;
+  getCorrelationId?: (request: Request) => string;
 }
 
 const DEFAULT_OPTIONS = {
@@ -29,7 +32,10 @@ export function configureApp(
 ): INestApplication {
   app
     .use(
-      apiStateMiddleware(),
+      apiStateMiddleware({
+        getTraceId: options?.getTraceId,
+        getCorrelationId: options?.getCorrelationId,
+      }),
       helmet({
         contentSecurityPolicy: false,
       }),
