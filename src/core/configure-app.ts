@@ -14,8 +14,8 @@ export interface ConfigureAppOptions {
     route?: string;
     documentFactory?: (document: OpenAPIObject) => OpenAPIObject;
   };
-  getTraceId?: (request: Request) => string;
-  getCorrelationId?: (request: Request) => string;
+  getTraceId?: (request: Request) => string | undefined | null;
+  getCorrelationId?: (request: Request) => string | undefined | null;
 }
 
 const DEFAULT_OPTIONS = {

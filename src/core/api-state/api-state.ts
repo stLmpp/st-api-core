@@ -50,31 +50,29 @@ export function apiStateRunInContext<T>(
 }
 
 export interface ApiStateMiddlewareOptions {
-  getTraceId?: (request: Request) => string;
-  getCorrelationId?: (request: Request) => string;
+  getTraceId?: (request: Request) => string | undefined | null;
+  getCorrelationId?: (request: Request) => string | undefined | null;
 }
 
 export function apiStateMiddleware(
   options?: ApiStateMiddlewareOptions,
 ): RequestHandler {
-  const correlationIdGetter =
-    options?.getCorrelationId ??
-    ((request) => {
-      const correlationIdHeaderRaw = request.get('x-correlation-id');
-      const correlationIdHeader = correlationIdHeaderRaw?.length
-        ? correlationIdHeaderRaw
-        : undefined;
-      return correlationIdHeader ?? createCorrelationId();
-    });
-  const traceIdGetter =
-    options?.getTraceId ??
-    ((request) => {
-      const traceIdHeaderRaw = request.get('x-trace-id');
-      const traceIdHeader = traceIdHeaderRaw?.length
-        ? traceIdHeaderRaw
-        : undefined;
-      return traceIdHeader ?? createCorrelationId();
-    });
+  function correlationIdGetter(request: Request) {
+    const correlationIdCustom = options?.getCorrelationId?.(request);
+    const correlationIdHeaderRaw = request.get('x-correlation-id');
+    const correlationIdHeader = correlationIdHeaderRaw?.length
+      ? correlationIdHeaderRaw
+      : undefined;
+    return correlationIdCustom || correlationIdHeader || createCorrelationId();
+  }
+  function traceIdGetter(request: Request) {
+    const traceIdCustom = options?.getTraceId?.(request);
+    const traceIdHeaderRaw = request.get('x-trace-id');
+    const traceIdHeader = traceIdHeaderRaw?.length
+      ? traceIdHeaderRaw
+      : undefined;
+    return traceIdCustom || traceIdHeader || createCorrelationId();
+  }
   return async (request, response, next) => {
     const correlationId = correlationIdGetter(request);
     const traceId = traceIdGetter(request);
