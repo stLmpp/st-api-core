@@ -6,22 +6,19 @@ on:
 jobs:
   code-quality:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 18 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -31,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Check if version has been updated
         id: check
         uses: EndBug/version-check@v2

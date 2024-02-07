@@ -84,5 +84,6 @@ export {
   type ApiState,
   type ApiStateMiddlewareOptions,
 } from './core/api-state/api-state.js';
-export { CID } from './core/api-state/cid.decorator.js';
+export { CID, TID } from './core/api-state/decorators.js';
 export { StApiDevMode } from './core/st-api-dev-mode.token.js';
+export { StApiName, provideStApiName } from './core/st-api-name.token.js';

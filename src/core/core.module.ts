@@ -6,11 +6,16 @@ import { EnvironmentVariables } from './environment-variables.js';
 import { CoreExceptionsFilter } from './exception/core-exceptions.filter.js';
 import { NodeEnv, NodeEnvEnum } from './node-env.token.js';
 import { StApiDevMode } from './st-api-dev-mode.token.js';
+import { provideStApiName, StApiName } from './st-api-name.token.js';
 import { ZInterceptor } from './z/z.interceptor.js';
+
+interface CoreModuleOptions {
+  name: string;
+}
 
 @Module({})
 export class CoreModule {
-  static forRoot(): DynamicModule {
+  static forRoot(options: CoreModuleOptions): DynamicModule {
     return {
       module: CoreModule,
       providers: [
@@ -26,9 +31,9 @@ export class CoreModule {
           inject: [ConfigService],
           provide: NodeEnv,
           useFactory: (config: ConfigService) =>
-            config.get(EnvironmentVariables.NodeEnv) === 'development'
-              ? NodeEnvEnum.Development
-              : NodeEnvEnum.Production,
+            config.get(EnvironmentVariables.NodeEnv) === 'production'
+              ? NodeEnvEnum.Production
+              : NodeEnvEnum.Development,
         },
         {
           inject: [ConfigService],
@@ -36,8 +41,10 @@ export class CoreModule {
           useFactory: (config: ConfigService) =>
             config.get(EnvironmentVariables.DevMode) === 'true',
         },
+        provideStApiName(options.name),
       ],
       imports: [ConfigModule],
+      exports: [StApiDevMode, StApiName],
     };
   }
 }
