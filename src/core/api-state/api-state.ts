@@ -78,7 +78,8 @@ export function apiStateMiddleware(
     const traceId = traceIdGetter(request);
     response
       .setHeader('x-correlation-id', correlationId)
-      .setHeader('x-trace-id', traceId);
+      .setHeader('x-trace-id', traceId)
+      .setHeader('x-st-api', 'true');
     apiStateRunInContext(
       () => {
         next();

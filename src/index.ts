@@ -1,3 +1,8 @@
+import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { z } from 'zod';
+
+extendZodWithOpenApi(z);
+
 // Common
 export { arrayGroupToMap } from './common/array-group-to-map.js';
 export { arrayUniqBy } from './common/array-uniq-by.js';

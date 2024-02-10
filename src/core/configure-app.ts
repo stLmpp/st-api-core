@@ -4,6 +4,7 @@ import compression from 'compression';
 import { type Request } from 'express';
 import helmet from 'helmet';
 import { type OpenAPIObject } from 'openapi3-ts/oas30';
+import { type SwaggerUIOptions } from 'swagger-ui';
 
 import { apiStateMiddleware } from './api-state/api-state.js';
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
@@ -13,6 +14,7 @@ export interface ConfigureAppOptions {
     documentBuilder?: (document: DocumentBuilder) => DocumentBuilder;
     route?: string;
     documentFactory?: (document: OpenAPIObject) => OpenAPIObject;
+    options?: SwaggerUIOptions;
   };
   getTraceId?: (request: Request) => string | undefined | null;
   getCorrelationId?: (request: Request) => string | undefined | null;
@@ -66,7 +68,8 @@ export function configureApp(
       {
         swaggerOptions: {
           displayRequestDuration: true,
-        },
+          ...options.swagger.options,
+        } satisfies SwaggerUIOptions,
       },
     );
   }
