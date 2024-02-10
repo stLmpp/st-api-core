@@ -67,9 +67,6 @@ devDependencies:
   '@types/node':
     specifier: ~20.11.17
     version: 20.11.17
-  '@types/swagger-ui':
-    specifier: ^3.52.4
-    version: 3.52.4
   '@typescript-eslint/eslint-plugin':
     specifier: ~6.21.0
     version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.56.0)(typescript@5.3.3)
@@ -1414,10 +1411,6 @@ packages:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
       '@types/node': 20.11.17
-    dev: true
-
-  /@types/swagger-ui@3.52.4:
-    resolution: {integrity: sha512-7NV7q8BfupqdQxr26OkM0g0YEPB9uXnKGzXadgcearvI9MoCHt3F72lPTX3fZZIlrr21DC0IK26wcDMZ37oFDA==}
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.56.0)(typescript@5.3.3):

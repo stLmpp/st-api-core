@@ -1,10 +1,13 @@
 import { type INestApplication, VersioningType } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  type SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import compression from 'compression';
 import { type Request } from 'express';
 import helmet from 'helmet';
 import { type OpenAPIObject } from 'openapi3-ts/oas30';
-import { type SwaggerUIOptions } from 'swagger-ui';
 
 import { apiStateMiddleware } from './api-state/api-state.js';
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
@@ -14,7 +17,7 @@ export interface ConfigureAppOptions {
     documentBuilder?: (document: DocumentBuilder) => DocumentBuilder;
     route?: string;
     documentFactory?: (document: OpenAPIObject) => OpenAPIObject;
-    options?: SwaggerUIOptions;
+    options?: SwaggerCustomOptions;
   };
   getTraceId?: (request: Request) => string | undefined | null;
   getCorrelationId?: (request: Request) => string | undefined | null;
@@ -60,16 +63,18 @@ export function configureApp(
     const document = documentFactory(
       SwaggerModule.createDocument(app, config, {}) as OpenAPIObject,
     );
+
     addMissingExceptionsOpenapi(document);
     SwaggerModule.setup(
       options.swagger.route ?? DEFAULT_OPTIONS.swagger.route,
       app,
       document as never,
       {
+        ...options.swagger.options,
         swaggerOptions: {
           displayRequestDuration: true,
-          ...options.swagger.options,
-        } satisfies SwaggerUIOptions,
+          ...options.swagger.options?.swaggerOptions,
+        },
       },
     );
   }
