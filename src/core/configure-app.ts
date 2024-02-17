@@ -49,7 +49,8 @@ export function configureApp(
     .enableVersioning({
       type: VersioningType.URI,
       prefix: 'v',
-    });
+    })
+    .enableShutdownHooks();
   if (options?.swagger) {
     const documentBuilder =
       options.swagger.documentBuilder ??
