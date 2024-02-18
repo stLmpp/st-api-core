@@ -11,6 +11,9 @@ import { type OpenAPIObject } from 'openapi3-ts/oas30';
 
 import { apiStateMiddleware } from './api-state/api-state.js';
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
+import { Exception } from './exception/exception.js';
+import type { ExceptionFactory } from './exception/exception.type.js';
+import { getOpenapiExceptions } from './exception/get-openapi-exceptions.js';
 
 export interface ConfigureAppOptions {
   swagger?: {
@@ -21,6 +24,7 @@ export interface ConfigureAppOptions {
   };
   getTraceId?: (request: Request) => string | undefined | null;
   getCorrelationId?: (request: Request) => string | undefined | null;
+  extraGlobalExceptions?: Array<ExceptionFactory | Exception>;
 }
 
 const DEFAULT_OPTIONS = {
@@ -65,7 +69,10 @@ export function configureApp(
       SwaggerModule.createDocument(app, config, {}) as OpenAPIObject,
     );
 
-    addMissingExceptionsOpenapi(document);
+    addMissingExceptionsOpenapi(
+      document,
+      getOpenapiExceptions(options.extraGlobalExceptions ?? []),
+    );
     SwaggerModule.setup(
       options.swagger.route ?? DEFAULT_OPTIONS.swagger.route,
       app,
