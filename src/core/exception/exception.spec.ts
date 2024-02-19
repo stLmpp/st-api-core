@@ -18,6 +18,7 @@ describe('exception', () => {
       'error',
       'description',
       '1',
+      '2',
     );
     expect(error.toJSON()).toEqual({
       status: HttpStatus.NOT_FOUND,
@@ -25,6 +26,7 @@ describe('exception', () => {
       errorCode: '0001',
       error: 'error',
       correlationId: '1',
+      traceId: '2',
     } satisfies ExceptionType);
   });
 

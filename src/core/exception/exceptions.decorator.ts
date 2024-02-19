@@ -7,7 +7,7 @@ export function Exceptions(factories: ExceptionFactory[]): MethodDecorator {
   const exceptions = getOpenapiExceptions(factories);
   return (target, propertyKey, descriptor) => {
     for (const exception of exceptions) {
-      ApiResponse(exception)(target, propertyKey, descriptor);
+      ApiResponse(exception as never)(target, propertyKey, descriptor);
     }
   };
 }
