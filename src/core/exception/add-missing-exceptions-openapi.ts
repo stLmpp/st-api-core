@@ -28,6 +28,7 @@ function addMissingExceptionsToOperation(
     response.description ??= exception.description;
     response.content ??= {};
     response.content['application/json'] ??= {};
+    response.headers ??= exception.headers;
     const content = response.content['application/json'];
     content.schema ??= exception.content['application/json'].schema;
     content.examples ??= {};
