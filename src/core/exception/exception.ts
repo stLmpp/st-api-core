@@ -3,7 +3,7 @@ import { getReasonPhrase } from 'http-status-codes';
 import type { SetOptional } from 'type-fest';
 
 import { safe } from '../../common/safe.js';
-import { getCorrelationId } from '../api-state/api-state.js';
+import { getCorrelationId, getTraceId } from '../api-state/api-state.js';
 
 import type {
   ExceptionArgs,
@@ -18,6 +18,11 @@ function getCorrelationIdWithDefault() {
   return correlationId ?? '';
 }
 
+function getTraceIdWithDefault() {
+  const [, traceId] = safe(() => getTraceId());
+  return traceId ?? '';
+}
+
 export class Exception extends HttpException {
   constructor(
     status: HttpStatus,
@@ -26,6 +31,7 @@ export class Exception extends HttpException {
     public readonly error: string,
     public readonly description?: string,
     correlationId = getCorrelationIdWithDefault(),
+    traceId = getTraceIdWithDefault(),
   ) {
     super(
       {
@@ -39,9 +45,11 @@ export class Exception extends HttpException {
     );
     this.name = 'Exception';
     this.correlationId = correlationId;
+    this.traceId = traceId;
   }
 
   public readonly correlationId: string;
+  public readonly traceId: string;
 
   toJSON(): ExceptionType {
     return {
@@ -50,6 +58,7 @@ export class Exception extends HttpException {
       errorCode: this.errorCode,
       message: this.message,
       status: this.getStatus(),
+      traceId: this.traceId,
     };
   }
 

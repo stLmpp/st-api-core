@@ -7,6 +7,7 @@ import { z, ZodSchema, ZodVoid } from 'zod';
 
 import { coerceArray } from '../../common/coerce-array.js';
 import { generateSchema } from '../../common/generate-schema.js';
+import { COMMON_HEADERS_OPENAPI } from '../common-headers-openapi.js';
 import { RESPONSE_SCHEMA_METADATA } from '../metadata.js';
 
 import { isZDto, Z_DTO_SCHEMA, type ZDto } from './z-dto.js';
@@ -49,6 +50,7 @@ export function ZRes<T extends ZodSchema>(
     const apiResponseOptions: ApiResponseOptions = {
       description: getReasonPhrase(status),
       status,
+      headers: COMMON_HEADERS_OPENAPI,
     };
     const isVoidSchema = singleSchema instanceof ZodVoid;
     if (!isVoidSchema) {
