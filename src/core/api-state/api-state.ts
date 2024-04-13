@@ -4,8 +4,21 @@ import { randomUUID } from 'node:crypto';
 import { Request, RequestHandler } from 'express';
 
 export interface ApiState {
+  /**
+   * @description ID of the execution
+   */
+  executionId: string;
+  /**
+   * @description ID that correlates all that happened in the process
+   */
   correlationId: string;
+  /**
+   * @description ID to track all the executions that correlates with one another
+   */
   traceId: string;
+  /**
+   * @description Any other metadata
+   */
   [key: string | symbol]: unknown;
 }
 
@@ -27,6 +40,10 @@ export function getTraceId(): string {
   return getStateKey('traceId');
 }
 
+export function getExecutionId(): string {
+  return getStateKey('executionId');
+}
+
 export function getState(): ApiState {
   const state = ASYNC_LOCAL_STORAGE.getStore();
   if (!state) {
@@ -45,6 +62,7 @@ export function apiStateRunInContext<T>(
     ...partialState,
     correlationId: partialState.correlationId ?? createCorrelationId(),
     traceId: partialState.traceId ?? createCorrelationId(),
+    executionId: partialState.executionId ?? createCorrelationId(),
   };
   return ASYNC_LOCAL_STORAGE.run(initialState, run);
 }
@@ -52,6 +70,7 @@ export function apiStateRunInContext<T>(
 export interface ApiStateMiddlewareOptions {
   getTraceId?: (request: Request) => string | undefined | null;
   getCorrelationId?: (request: Request) => string | undefined | null;
+  getExecutionId?: (request: Request) => string | undefined | null;
 }
 
 export function apiStateMiddleware(
@@ -73,12 +92,22 @@ export function apiStateMiddleware(
       : undefined;
     return traceIdCustom || traceIdHeader || createCorrelationId();
   }
+  function executionIdGetter(request: Request) {
+    const executionIdCustom = options?.getExecutionId?.(request);
+    const executionIdHeaderRaw = request.get('x-trace-id');
+    const executionIdHeader = executionIdHeaderRaw?.length
+      ? executionIdHeaderRaw
+      : undefined;
+    return executionIdCustom || executionIdHeader || createCorrelationId();
+  }
   return async (request, response, next) => {
     const correlationId = correlationIdGetter(request);
     const traceId = traceIdGetter(request);
+    const executionId = executionIdGetter(request);
     response
       .setHeader('x-correlation-id', correlationId)
       .setHeader('x-trace-id', traceId)
+      .setHeader('x-execution-id', executionId)
       .setHeader('x-st-api', 'true');
     apiStateRunInContext(
       () => {
@@ -87,6 +116,7 @@ export function apiStateMiddleware(
       {
         correlationId,
         traceId,
+        executionId,
       },
     );
   };

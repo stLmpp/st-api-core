@@ -15,4 +15,11 @@ export const COMMON_HEADERS_OPENAPI = {
     },
     // TODO add description
   },
+  'x-execution-id': {
+    schema: {
+      type: 'string',
+      example: '66811850-87e9-493b-b956-0b563e69297d',
+    },
+    // TODO add description
+  },
 } as const satisfies HeadersObject;

@@ -68,7 +68,7 @@ const {
           );
           if (error) {
             throw new ReferenceError(
-              '[CoreModule] name as not provided and could not find package.json',
+              '[CoreModule] name was not provided and could not find package.json',
               {
                 cause: error,
               },
@@ -79,7 +79,7 @@ const {
           );
           if (errorParsed) {
             throw new TypeError(
-              `[CoreModule] name as not provided and failed to parse package.json`,
+              `[CoreModule] name was not provided and failed to parse package.json`,
               {
                 cause: errorParsed,
               },
@@ -91,7 +91,7 @@ const {
             typeof packageJSON.name !== 'string'
           ) {
             throw new Error(
-              `[CoreModule] name as not provided and could not found package.json name property`,
+              `[CoreModule] name was not provided and could not found package.json name property`,
               {
                 cause: errorParsed,
               },

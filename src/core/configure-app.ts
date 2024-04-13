@@ -24,6 +24,7 @@ export interface ConfigureAppOptions {
   };
   getTraceId?: (request: Request) => string | undefined | null;
   getCorrelationId?: (request: Request) => string | undefined | null;
+  getExecutionId?: (request: Request) => string | undefined | null;
   extraGlobalExceptions?: Array<ExceptionFactory | Exception>;
 }
 
@@ -60,6 +61,7 @@ export function configureApp(
       options.swagger.documentBuilder ??
       DEFAULT_OPTIONS.swagger.documentBuilder;
     const config = documentBuilder(
+      // TODO update to swagger 3.1.0: https://github.com/anatine/zod-plugins/issues/191
       new DocumentBuilder().setTitle('API').setVersion('1.0.0'),
     ).build();
     const documentFactory =
