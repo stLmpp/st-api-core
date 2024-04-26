@@ -14,6 +14,7 @@ import {
 import { ThrottlerOptionsToken } from './throttler-options.token.js';
 import { Throttler } from './throttler.js';
 import type { ThrottlerOptions } from './throttler.type.js';
+import { THROTTLER_KEY } from './throttler.constant.js';
 
 @Injectable()
 export class ThrottlerGuard implements CanActivate {
@@ -29,23 +30,23 @@ export class ThrottlerGuard implements CanActivate {
 
     // Return early if the current route should be skipped.
     if (
-      this.reflector.getAllAndOverride<boolean>(THROTTLER_SKIP, [
-        handler,
-        classReference,
-      ])
+      this.reflector.getAllAndOverride<boolean>(
+        `${THROTTLER_SKIP}${THROTTLER_KEY}`,
+        [handler, classReference],
+      )
     ) {
       return true;
     }
 
     // Return early when we have no limit or ttl data.
-    const limit = this.reflector.getAllAndOverride<number>(THROTTLER_LIMIT, [
-      handler,
-      classReference,
-    ]);
-    const ttl = this.reflector.getAllAndOverride<number>(THROTTLER_TTL, [
-      handler,
-      classReference,
-    ]);
+    const limit = this.reflector.getAllAndOverride<number>(
+      `${THROTTLER_LIMIT}${THROTTLER_KEY}`,
+      [handler, classReference],
+    );
+    const ttl = this.reflector.getAllAndOverride<number>(
+      `${THROTTLER_TTL}${THROTTLER_KEY}`,
+      [handler, classReference],
+    );
 
     await this.throttler.rejectOnQuotaExceededOrRecordUsage({
       ttl: ttl ?? this.options.ttl,

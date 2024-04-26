@@ -52,6 +52,11 @@ export {
 export { Exceptions } from './core/exception/exceptions.decorator.js';
 
 // Throttler
+export {
+  type ThrottleOptions,
+  Throttle,
+} from './core/throttler/throttle.decorator.js';
+export { SkipThrottle } from './core/throttler/throttle-skip.decorator.js';
 export { ThrottlerGuard } from './core/throttler/throttler.guard.js';
 export { Throttler } from './core/throttler/throttler.js';
 export {
