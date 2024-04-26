@@ -10,7 +10,7 @@ export interface ThrottleOptions {
 export function Throttle({
   ttl,
   limit,
-}: ThrottleOptions): MethodDecorator | ClassDecorator {
+}: ThrottleOptions): MethodDecorator & ClassDecorator {
   return applyDecorators(
     NestThrottle({
       [THROTTLER_KEY]: {
