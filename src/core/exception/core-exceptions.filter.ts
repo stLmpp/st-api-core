@@ -38,7 +38,11 @@ export class CoreExceptionsFilter implements ExceptionFilter {
       exception = unknownException;
     }
 
-    if (!exception) {
+    if (exception) {
+      Logger.error(
+        `An exception occurred. Details: ${JSON.stringify(exception.toJSON())}`,
+      );
+    } else {
       Logger.error(
         `An unknown error occurred. Error: "${unknownException}". Details: ${JSON.stringify(
           unknownException,
