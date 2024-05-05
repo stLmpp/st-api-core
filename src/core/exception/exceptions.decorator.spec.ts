@@ -6,8 +6,8 @@ import { mock } from 'vitest-mock-extended';
 import { generateSchema } from '../../common/generate-schema.js';
 
 import { exception } from './exception.js';
+import { ExceptionSchema } from './exception.schema.js';
 import { Exceptions } from './exceptions.decorator.js';
-import { ExceptionSchema } from './exceptions.schema.js';
 
 vi.mock('@nestjs/swagger', async (importOriginal) => {
   const originalModule: object = await importOriginal();

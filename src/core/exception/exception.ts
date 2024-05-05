@@ -5,6 +5,7 @@ import type { SetOptional } from 'type-fest';
 import { safe } from '../../common/safe.js';
 import { getCorrelationId, getTraceId } from '../api-state/api-state.js';
 
+import { ExceptionSchema } from './exception.schema.js';
 import type {
   ExceptionArgs,
   ExceptionFactory,
@@ -67,6 +68,23 @@ export class Exception extends HttpException {
       exception instanceof Exception &&
       exception.errorCode === this.errorCode &&
       exception.getStatus() === this.getStatus()
+    );
+  }
+
+  static isExceptionJSON(value: unknown): value is Exception {
+    const result = ExceptionSchema.safeParse(value);
+    return result.success;
+  }
+
+  static fromJSON(exceptionJson: ExceptionType): Exception {
+    return new Exception(
+      exceptionJson.status,
+      exceptionJson.message,
+      exceptionJson.errorCode,
+      exceptionJson.error,
+      exceptionJson.description,
+      exceptionJson.correlationId,
+      exceptionJson.traceId,
     );
   }
 }

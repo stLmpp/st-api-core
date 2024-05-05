@@ -41,6 +41,7 @@ export {
   ROUTE_NOT_FOUND,
   UNKNOWN_INTERNAL_SERVER_ERROR,
 } from './core/exception/core-exceptions.js';
+export { ExceptionSchema } from './core/exception/exception.schema.js';
 export { exception, Exception } from './core/exception/exception.js';
 export {
   type ExceptionArgs,

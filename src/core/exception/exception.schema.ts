@@ -7,4 +7,5 @@ export const ExceptionSchema = z.object({
   errorCode: z.string().min(4),
   correlationId: z.string(),
   traceId: z.string(),
+  description: z.string().optional(),
 });

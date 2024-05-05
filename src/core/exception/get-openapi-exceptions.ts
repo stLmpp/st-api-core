@@ -8,8 +8,8 @@ import { COMMON_HEADERS_OPENAPI } from '../common-headers-openapi.js';
 
 import * as CoreExceptions from './core-exceptions.js';
 import { Exception } from './exception.js';
+import { ExceptionSchema } from './exception.schema.js';
 import type { ExceptionFactory } from './exception.type.js';
-import { ExceptionSchema } from './exceptions.schema.js';
 
 const CORRELATION_ID_EXAMPLE = '66811850-87e9-493b-b956-0b563e69297d';
 const EXCEPTION_OPENAPI_SCHEMA = generateSchema(ExceptionSchema);
