@@ -71,7 +71,7 @@ export class Exception extends HttpException {
     );
   }
 
-  static isExceptionJSON(value: unknown): value is Exception {
+  static isExceptionJSON(value: unknown): value is ExceptionType {
     const result = ExceptionSchema.safeParse(value);
     return result.success;
   }
