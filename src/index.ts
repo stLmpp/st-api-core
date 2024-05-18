@@ -95,6 +95,8 @@ export {
   getExecutionId,
   type ApiState,
   type ApiStateMiddlewareOptions,
+  getStateMetadataKey,
+  getStateMetadata,
 } from './core/api-state/api-state.js';
 export { CID, TID, EID } from './core/api-state/decorators.js';
 export { StApiDevMode } from './core/st-api-dev-mode.token.js';
