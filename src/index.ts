@@ -1,4 +1,4 @@
-import { extendZodWithOpenApi } from '@anatine/zod-openapi';
+import { extendZodWithOpenApi } from '@st-api/zod-openapi';
 import { z } from 'zod';
 
 extendZodWithOpenApi(z);
@@ -74,7 +74,7 @@ export { ZRes } from './core/z/z-res.decorator.js';
 export { ZInterceptor } from './core/z/z.interceptor.js';
 export { type ZDto, zDto } from './core/z/z-dto.js';
 export { ZValidationPipe } from './core/z/z-validation.pipe.js';
-export { extendApi } from '@anatine/zod-openapi';
+export { extendApi } from '@st-api/zod-openapi';
 
 // Core
 export { CoreModule } from './core/core.module.js';

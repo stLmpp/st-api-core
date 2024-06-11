@@ -1,4 +1,4 @@
-import { generateSchema as zodOpenapiGenerateSchema } from '@anatine/zod-openapi';
+import { generateSchema as zodOpenapiGenerateSchema } from '@st-api/zod-openapi';
 import { ZodSchema } from 'zod';
 
 export function generateSchema(schema: ZodSchema, useOutput = false): any {
