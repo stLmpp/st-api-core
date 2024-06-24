@@ -1,14 +1,14 @@
 import { tsupConfig } from '@st-api/config';
 import { defineConfig } from 'tsup';
-import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import fs from 'node:fs';
+import path from 'node:path';
 
-const polyfillPath = join('src', 'polyfill');
+const polyfillPath = path.join('src', 'polyfill');
 
 const polyfills = Object.fromEntries(
-  readdirSync(polyfillPath).map((file) => {
+  fs.readdirSync(polyfillPath).map((file) => {
     const fileWithoutExt = file.replace(/\.ts$/, '');
-    return [`polyfill/${fileWithoutExt}`, join(polyfillPath, file)];
+    return [`polyfill/${fileWithoutExt}`, path.join(polyfillPath, file)];
   }),
 );
 

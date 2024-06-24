@@ -3,9 +3,9 @@
  *
  * @param array - The input array to be grouped.
  * @param callback - The callback function used to determine the group key for each element.
- *                              The callback function should accept three arguments: the current element,
- *                              the index of the current element, and the array itself. It should return
- *                              the key used for grouping the elements.
+ * The callback function should accept three arguments: the current element,
+ * the index of the current element, and the array itself. It should return
+ * the key used for grouping the elements.
  */
 export function arrayGroupToMap<T, R>(
   array: readonly T[],

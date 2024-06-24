@@ -50,16 +50,15 @@ function formatZodErrorInternal(
 ): ZodErrorFormatted[] {
   const zodErrors = coerceArray(zodErrorOrErrors);
   const getInitial = (): ZodErrorFormatted[] => [];
-  return zodErrors.reduce(
-    (errorsLevel1, error) => [
-      ...errorsLevel1,
-      ...error.issues.reduce(
-        (errorsLevel2, issue) => [...errorsLevel2, ...formatZodIssue(issue)],
-        getInitial(),
-      ),
-    ],
-    getInitial(),
-  );
+  return zodErrors.reduce((errorsLevel1, error) => {
+    errorsLevel1.push(
+      ...error.issues.reduce((errorsLevel2, issue) => {
+        errorsLevel2.push(...formatZodIssue(issue));
+        return errorsLevel2;
+      }, getInitial()),
+    );
+    return errorsLevel1;
+  }, getInitial());
 }
 
 /**

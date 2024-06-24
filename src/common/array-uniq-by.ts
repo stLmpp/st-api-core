@@ -3,7 +3,7 @@
  *
  * @param array - The array to filter.
  * @param iteratee - The iteratee function to determine the uniqueness of each element.
- *                             This function is called with three arguments: value, index, and array.
+ * This function is called with three arguments: value, index, and array.
  */
 export function arrayUniqBy<T>(
   array: readonly T[],

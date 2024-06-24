@@ -1,5 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 import {
   ConfigurableModuleBuilder,
@@ -62,9 +62,9 @@ const {
       useFactory: (options: CoreModuleOptions) => {
         let name = options.name;
         if (!name) {
-          const path = join(process.cwd(), 'package.json');
+          const filePath = path.join(process.cwd(), 'package.json');
           const [error, packageJSONString] = safe(() =>
-            readFileSync(path, 'utf8'),
+            fs.readFileSync(filePath, 'utf8'),
           );
           if (error) {
             throw new ReferenceError(
