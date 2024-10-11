@@ -1,6 +1,6 @@
 import type { Class, PackageJson } from 'type-fest';
 import { Injector, Provider } from '@stlmpp/di';
-import { Hono } from 'hono';
+import { Hono, HonoRequest } from 'hono';
 import { MethodType } from './decorator/controller.decorator.js';
 import { apiStateMiddleware } from './api-state/api-state.middleware.js';
 import { swaggerUI } from '@hono/swagger-ui';
@@ -23,6 +23,8 @@ import { safe, safeAsync } from '../common/safe.js';
 import fs from 'node:fs';
 import { FORBIDDEN, INVALID_RESPONSE } from './exception/core-exceptions.js';
 import { formatZodErrorString } from '../common/zod-error-formatter.js';
+import { ExceptionFactory } from './exception/exception.type.js';
+import { Exception } from './exception/exception.js';
 
 export interface HonoAppOptions<T extends Hono> {
   hono: T;
@@ -30,6 +32,10 @@ export interface HonoAppOptions<T extends Hono> {
   providers?: Array<Provider | Class<any>>;
   swaggerDocumentBuilder?: (document: OpenAPIObject) => OpenAPIObject;
   name?: string;
+  getTraceId?: (request: HonoRequest) => string | undefined | null;
+  getCorrelationId?: (request: HonoRequest) => string | undefined | null;
+  getExecutionId?: (request: HonoRequest) => string | undefined | null;
+  extraGlobalExceptions?: Array<ExceptionFactory | Exception>;
 }
 
 export interface HonoApp<T extends Hono> {
@@ -105,10 +111,16 @@ export async function createHonoApp<T extends Hono>({
   });
 
   hono
-    .get('/openapi.json', (c) => c.json(openapi.getDocument()))
-    .use(apiStateMiddleware())
     .use(secureHeaders())
     .use(compress())
+    .get('/openapi.json', (c) => c.json(openapi.getDocument()))
+    .use(
+      apiStateMiddleware({
+        getCorrelationId: options?.getCorrelationId,
+        getExecutionId: options?.getExecutionId,
+        getTraceId: options?.getTraceId,
+      }),
+    )
     .use(
       '/openapi',
       swaggerUI({
@@ -186,6 +198,7 @@ export async function createHonoApp<T extends Hono>({
             headers: c.req.valid('header'),
             params: c.req.valid('param'),
             query: c.req.valid('query'),
+            getClass: () => controller,
           });
           if (!result) {
             throwInternal(FORBIDDEN());
@@ -216,7 +229,7 @@ export async function createHonoApp<T extends Hono>({
     );
   }
 
-  openapi.addMissingExceptions();
+  openapi.addMissingExceptions(options.extraGlobalExceptions);
 
   if (swaggerDocumentBuilder) {
     openapi.build(swaggerDocumentBuilder);

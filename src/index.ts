@@ -92,6 +92,19 @@ export { type CanActivate } from './core/guard/can-activate.interface.js';
 export { GLOBAL_GUARDS } from './core/guard/global-guards.token.js';
 export { UseGuards } from './core/guard/use-guards.decorator.js';
 
+// Throttler
+export {
+  type ThrottleOptions,
+  Throttle,
+} from './core/throttler/throttle.decorator.js';
+export { ThrottlerGuard } from './core/throttler/throttler.guard.js';
+export { Throttler } from './core/throttler/throttler.js';
+export {
+  type ThrottlerOptions,
+  type ThrottlerOptionsArgs,
+} from './core/throttler/throttler.type.js';
+export { ThrottlerOptionsToken } from './core/throttler/throttler-options.token.js';
+
 // Root
 export { type Handler } from './core/handler.type.js';
 export { type HandlerContext } from './core/handler-context.js';

@@ -23,11 +23,21 @@ function executionIdGetter(request: HonoRequest) {
   return executionIdHeader || createCorrelationId();
 }
 
-export function apiStateMiddleware(): MiddlewareHandler {
+export interface ApiStateMiddlewareOptions {
+  getTraceId?: (request: HonoRequest) => string | undefined | null;
+  getCorrelationId?: (request: HonoRequest) => string | undefined | null;
+  getExecutionId?: (request: HonoRequest) => string | undefined | null;
+}
+
+export function apiStateMiddleware(
+  options?: ApiStateMiddlewareOptions,
+): MiddlewareHandler {
   return async (c, next) => {
-    const correlationId = correlationIdGetter(c.req);
-    const traceId = traceIdGetter(c.req);
-    const executionId = executionIdGetter(c.req);
+    const correlationId =
+      options?.getCorrelationId?.(c.req) || correlationIdGetter(c.req);
+    const traceId = options?.getTraceId?.(c.req) || traceIdGetter(c.req);
+    const executionId =
+      options?.getExecutionId?.(c.req) || executionIdGetter(c.req);
     await apiStateRunInContext(
       async () => {
         await next();

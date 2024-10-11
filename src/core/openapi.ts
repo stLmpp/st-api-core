@@ -8,6 +8,8 @@ import { generateSchema } from '@st-api/zod-openapi';
 import { getReasonPhrase } from 'http-status-codes';
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
 import { getOpenapiExceptions } from './exception/get-openapi-exceptions.js';
+import { ExceptionFactory } from './exception/exception.type.js';
+import { Exception } from './exception/exception.js';
 
 export class Openapi {
   constructor(document: OpenAPIObject) {
@@ -107,8 +109,11 @@ export class Openapi {
     return this;
   }
 
-  addMissingExceptions() {
-    addMissingExceptionsOpenapi(this.#document, getOpenapiExceptions([]));
+  addMissingExceptions(exceptions?: Array<ExceptionFactory | Exception>) {
+    addMissingExceptionsOpenapi(
+      this.#document,
+      getOpenapiExceptions(exceptions ?? []),
+    );
   }
 
   build(builder: (document: OpenAPIObject) => OpenAPIObject): this {
