@@ -1,6 +1,6 @@
-import { ValueProvider } from '@nestjs/common';
+import { InjectionToken, ValueProvider } from '@stlmpp/di';
 
-export const StApiName = 'StApiName';
+export const StApiName = new InjectionToken<string>('StApiName');
 
 export function provideStApiName(name: string): ValueProvider {
   return {

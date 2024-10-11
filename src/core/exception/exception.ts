@@ -1,4 +1,3 @@
-import { HttpException, type HttpStatus } from '@nestjs/common';
 import { getReasonPhrase } from 'http-status-codes';
 import type { SetOptional } from 'type-fest';
 
@@ -13,6 +12,7 @@ import type {
   ExceptionFactoryWithoutError,
   ExceptionType,
 } from './exception.type.js';
+import { StatusCode } from 'hono/utils/http-status';
 
 function getCorrelationIdWithDefault() {
   const [, correlationId] = safe(() => getCorrelationId());
@@ -24,9 +24,9 @@ function getTraceIdWithDefault() {
   return traceId ?? '';
 }
 
-export class Exception extends HttpException {
+export class Exception extends Error {
   constructor(
-    status: HttpStatus,
+    public readonly status: StatusCode,
     message: string,
     public readonly errorCode: string,
     public readonly error: string,
@@ -34,16 +34,7 @@ export class Exception extends HttpException {
     correlationId = getCorrelationIdWithDefault(),
     traceId = getTraceIdWithDefault(),
   ) {
-    super(
-      {
-        status,
-        message,
-        errorCode,
-        error,
-        correlationId,
-      },
-      status,
-    );
+    super(message);
     this.name = 'Exception';
     this.correlationId = correlationId;
     this.traceId = traceId;
@@ -52,13 +43,20 @@ export class Exception extends HttpException {
   public readonly correlationId: string;
   public readonly traceId: string;
 
+  /**
+   * @deprecated Use the readonly property "status"
+   */
+  getStatus(): StatusCode {
+    return this.status;
+  }
+
   toJSON(): ExceptionType {
     return {
       correlationId: this.correlationId,
       error: this.error,
       errorCode: this.errorCode,
       message: this.message,
-      status: this.getStatus(),
+      status: this.status,
       traceId: this.traceId,
     };
   }
@@ -67,7 +65,7 @@ export class Exception extends HttpException {
     return (
       exception instanceof Exception &&
       exception.errorCode === this.errorCode &&
-      exception.getStatus() === this.getStatus()
+      exception.status === this.status
     );
   }
 
@@ -78,7 +76,7 @@ export class Exception extends HttpException {
 
   static fromJSON(exceptionJson: ExceptionType): Exception {
     return new Exception(
-      exceptionJson.status,
+      exceptionJson.status as StatusCode,
       exceptionJson.message,
       exceptionJson.errorCode,
       exceptionJson.error,
