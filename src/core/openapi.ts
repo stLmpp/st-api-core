@@ -43,6 +43,7 @@ export class Openapi {
       .join('/');
     const pathOperationId = path.replaceAll('/', '_').replaceAll(':', 'p~');
     const operation: OperationObject = {
+      ...controller.openapi,
       responses: {},
       operationId: `${method}-${pathOperationId}`,
     };
@@ -66,7 +67,7 @@ export class Openapi {
         operation.parameters.push({
           name: key,
           required: !value.isOptional(),
-          in: 'query',
+          in: 'path',
           schema: generateSchema(value),
         });
       }
@@ -76,7 +77,7 @@ export class Openapi {
         operation.parameters.push({
           name: key,
           required: !value.isOptional(),
-          in: 'path',
+          in: 'query',
           schema: generateSchema(value),
         });
       }

@@ -1,10 +1,12 @@
 import { Injectable } from '@stlmpp/di';
+import { OperationObject } from 'openapi3-ts/oas30';
 
 export type MethodType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface ControllerOptions {
   path?: string;
   method?: MethodType;
+  openapi?: OperationObject;
 }
 
 const ControllerMetadataSymbol = Symbol('ControllerMetadata');

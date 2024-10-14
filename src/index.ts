@@ -114,5 +114,3 @@ export {
   createHonoApp,
 } from './core/hono-app.js';
 export { StApiName, provideStApiName } from './core/st-api-name.token.js';
-
-// TODO add rate-limiter

@@ -51,10 +51,7 @@ export async function createHonoApp<T extends Hono>({
   ...options
 }: HonoAppOptions<T>): Promise<HonoApp<T>> {
   const injector = Injector.create('App');
-  injector.register(providers ?? []);
-
   providers ??= [];
-
   providers.push({
     provide: StApiName,
     useFactory: () => {
@@ -100,6 +97,7 @@ export async function createHonoApp<T extends Hono>({
       return name;
     },
   });
+  injector.register(providers);
 
   const openapi = new Openapi({
     openapi: '3.0.0',
@@ -122,7 +120,7 @@ export async function createHonoApp<T extends Hono>({
       }),
     )
     .use(
-      '/openapi',
+      '/openapi', // TODO fix openapi on emulator
       swaggerUI({
         url: '/openapi.json',
         persistAuthorization: true,
@@ -192,14 +190,19 @@ export async function createHonoApp<T extends Hono>({
         for (const guard of guards) {
           const guardInstance =
             typeof guard === 'function' ? await injector.resolve(guard) : guard;
-          const result = await guardInstance.handle({
-            body: c.req.valid('json'),
-            c,
-            headers: c.req.valid('header'),
-            params: c.req.valid('param'),
-            query: c.req.valid('query'),
-            getClass: () => controller,
-          });
+          const [guardError, result] = await safeAsync(async () =>
+            guardInstance.handle({
+              body: c.req.valid('json'),
+              c,
+              headers: c.req.valid('header'),
+              params: c.req.valid('param'),
+              query: c.req.valid('query'),
+              getClass: () => controller,
+            }),
+          );
+          if (guardError) {
+            throwInternal(guardError);
+          }
           if (!result) {
             throwInternal(FORBIDDEN());
           }
