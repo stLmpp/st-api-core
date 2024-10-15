@@ -1,4 +1,4 @@
-import type { ExecutionContext } from '@nestjs/common';
+import { HandlerContext } from '../handler-context.js';
 
 export interface ThrottlerOptions {
   limit: number;
@@ -6,5 +6,5 @@ export interface ThrottlerOptions {
 }
 
 export interface ThrottlerOptionsArgs extends ThrottlerOptions {
-  context: ExecutionContext;
+  context: HandlerContext;
 }

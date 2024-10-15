@@ -1,13 +1,32 @@
-import { ApiResponse } from '@nestjs/swagger';
+import { ExceptionFactory } from './exception.type.js';
 
-import type { ExceptionFactory } from './exception.type.js';
-import { getOpenapiExceptions } from './get-openapi-exceptions.js';
+const ExceptionsMetadataSymbol = Symbol('ExceptionsMetadata');
 
-export function Exceptions(factories: ExceptionFactory[]): MethodDecorator {
-  const exceptions = getOpenapiExceptions(factories);
-  return (target, propertyKey, descriptor) => {
-    for (const exception of exceptions) {
-      ApiResponse(exception as never)(target, propertyKey, descriptor);
-    }
+export interface ExceptionsMetadata {
+  factories: ExceptionFactory[];
+}
+
+interface Exceptions {
+  (factories: ExceptionFactory[]): ClassDecorator;
+  getMetadata(target: any): ExceptionsMetadata | undefined;
+  setMetadata(target: any, metadata: ExceptionsMetadata): void;
+}
+
+const getMetadata: Exceptions['getMetadata'] = (target) =>
+  Reflect.getMetadata(ExceptionsMetadataSymbol, target);
+const setMetadata: Exceptions['setMetadata'] = (target, metadata) => {
+  Reflect.defineMetadata(ExceptionsMetadataSymbol, metadata, target);
+};
+
+function Decorator(factories: ExceptionFactory[]): ClassDecorator {
+  return (target: any) => {
+    setMetadata(target, {
+      factories,
+    });
   };
 }
+
+export const Exceptions: Exceptions = Object.assign(Decorator, {
+  getMetadata,
+  setMetadata,
+});

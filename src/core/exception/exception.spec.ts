@@ -1,5 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
-import { getReasonPhrase } from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import {
   BAD_REQUEST_BODY,
@@ -12,7 +11,7 @@ import { ExceptionType } from './exception.type.js';
 describe('exception', () => {
   it('should convert to JSON', () => {
     const error = new Exception(
-      HttpStatus.NOT_FOUND,
+      StatusCodes.NOT_FOUND,
       'message',
       '0001',
       'error',
@@ -21,7 +20,7 @@ describe('exception', () => {
       '2',
     );
     expect(error.toJSON()).toEqual({
-      status: HttpStatus.NOT_FOUND,
+      status: StatusCodes.NOT_FOUND,
       message: 'message',
       errorCode: '0001',
       error: 'error',
@@ -54,7 +53,7 @@ describe('exception', () => {
       left: UNKNOWN_INTERNAL_SERVER_ERROR(),
       right: {
         errorCode: 'CORE-0005',
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
       },
       expected: false,
     },
@@ -68,7 +67,7 @@ describe('exception', () => {
   it('should use args.error', () => {
     expect(
       exception({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
         errorCode: '1',
         error: 'error',
       })().error,
@@ -78,7 +77,7 @@ describe('exception', () => {
   it('should use error', () => {
     expect(
       exception({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
         errorCode: '1',
       })('error 2').error,
     ).toBe('error 2');
@@ -87,9 +86,9 @@ describe('exception', () => {
   it('should use status code error', () => {
     expect(
       exception({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: StatusCodes.INTERNAL_SERVER_ERROR,
         errorCode: '1',
       })('').error,
-    ).toEqual(getReasonPhrase(HttpStatus.INTERNAL_SERVER_ERROR));
+    ).toEqual(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR));
   });
 });

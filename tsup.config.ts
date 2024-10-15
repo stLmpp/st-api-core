@@ -14,12 +14,13 @@ const polyfills = Object.fromEntries(
 
 export default defineConfig({
   ...tsupConfig,
+  dts: false,
   entry: {
     index: './src/index.ts',
     'vitest.setup': './vitest.setup.ts',
     ...polyfills,
   },
-  dts: {
+  experimentalDts: {
     entry: {
       index: './src/index.ts',
     },

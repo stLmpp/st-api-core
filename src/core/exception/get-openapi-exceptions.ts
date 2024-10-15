@@ -3,13 +3,13 @@ import type { HeadersObject } from 'openapi3-ts/oas30';
 import type { ExamplesObject } from 'openapi3-ts/oas31';
 
 import { arrayUniqBy } from '../../common/array-uniq-by.js';
-import { generateSchema } from '../../common/generate-schema.js';
 import { COMMON_HEADERS_OPENAPI } from '../common-headers-openapi.js';
 
 import * as CoreExceptions from './core-exceptions.js';
 import { Exception } from './exception.js';
 import { ExceptionSchema } from './exception.schema.js';
 import type { ExceptionFactory } from './exception.type.js';
+import { generateSchema } from '@st-api/zod-openapi';
 
 const CORRELATION_ID_EXAMPLE = '66811850-87e9-493b-b956-0b563e69297d';
 const EXCEPTION_OPENAPI_SCHEMA = generateSchema(ExceptionSchema);
@@ -36,12 +36,13 @@ export function getOpenapiExceptions(
         ? exceptionOrFactory
         : exceptionOrFactory(''),
   );
-  const statusList = arrayUniqBy(exceptions, (exception) =>
-    exception.getStatus(),
-  ).map((exception) => exception.getStatus());
+  const statusList = arrayUniqBy(
+    exceptions,
+    (exception) => exception.status,
+  ).map((exception) => exception.status);
   return statusList.map((status) => {
     const exceptionsStatus = exceptions.filter(
-      (exception) => exception.getStatus() === status,
+      (exception) => exception.status === status,
     );
     const examples: ExamplesObject = {};
     for (const exception of exceptionsStatus) {

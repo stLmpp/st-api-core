@@ -24,6 +24,7 @@ function addMissingExceptionsToOperation(
 ) {
   for (const exception of exceptions) {
     operation.responses[exception.status] ??= {};
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const response: ResponseObject = operation.responses[exception.status];
     response.description ??= exception.description;
     response.content ??= {};

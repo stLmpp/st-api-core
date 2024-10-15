@@ -1,22 +1,29 @@
-import { applyDecorators } from '@nestjs/common';
-import { Throttle as NestThrottle } from '@nestjs/throttler';
-import { THROTTLER_KEY } from './throttler.constant.js';
-
 export interface ThrottleOptions {
   ttl?: number;
   limit?: number;
 }
 
-export function Throttle({
-  ttl,
-  limit,
-}: ThrottleOptions): MethodDecorator & ClassDecorator {
-  return applyDecorators(
-    NestThrottle({
-      [THROTTLER_KEY]: {
-        ttl,
-        limit,
-      },
-    }),
-  );
+const ThrottleMetadataSymbol = Symbol('ThrottleMetadata');
+
+interface Throttle {
+  (options?: ThrottleOptions): ClassDecorator;
+  getMetadata(target: any): ThrottleOptions | undefined;
+  setMetadata(target: any, options?: ThrottleOptions): void;
 }
+
+const getMetadata: Throttle['getMetadata'] = (target) =>
+  Reflect.getMetadata(ThrottleMetadataSymbol, target);
+const setMetadata: Throttle['setMetadata'] = (target, options) => {
+  Reflect.defineMetadata(ThrottleMetadataSymbol, options ?? {}, target);
+};
+
+function Decorator(options?: ThrottleOptions): ClassDecorator {
+  return (target) => {
+    setMetadata(target, options);
+  };
+}
+
+export const Throttle: Throttle = Object.assign(Decorator, {
+  getMetadata,
+  setMetadata,
+});
