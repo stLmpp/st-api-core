@@ -6,7 +6,7 @@ export type MethodType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export interface ControllerOptions {
   path?: string;
   method?: MethodType;
-  openapi?: OperationObject;
+  openapi?: Partial<OperationObject>;
 }
 
 const ControllerMetadataSymbol = Symbol('ControllerMetadata');

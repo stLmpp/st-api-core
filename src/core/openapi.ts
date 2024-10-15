@@ -102,10 +102,12 @@ export class Openapi {
         },
       } satisfies ResponseObject;
     }
-    if (exceptions?.factories.length) {
-      for (const exception of getOpenapiExceptions(exceptions.factories)) {
-        operation.responses[exception.status] = exception;
+    for (const exception of getOpenapiExceptions(exceptions?.factories ?? [])) {
+      if (!exception.status) {
+        continue;
       }
+      operation.responses[exception.status] = exception;
+      exception.status = undefined;
     }
     return this;
   }

@@ -16,7 +16,7 @@ const EXCEPTION_OPENAPI_SCHEMA = generateSchema(ExceptionSchema);
 const CORE_EXCEPTIONS = Object.values(CoreExceptions);
 
 export interface OpenapiException {
-  status: number;
+  status: number | undefined;
   description: string;
   headers: HeadersObject;
   content: {
