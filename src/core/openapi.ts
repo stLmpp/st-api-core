@@ -106,8 +106,9 @@ export class Openapi {
       if (!exception.status) {
         continue;
       }
-      operation.responses[exception.status] = exception;
-      exception.status = undefined;
+      operation.responses[exception.status] = Object.assign(exception, {
+        status: undefined,
+      });
     }
     return this;
   }
