@@ -186,7 +186,7 @@ export async function createHonoApp<T extends Hono>({
         if (ctxMetadata) {
           args[ctxMetadata.parameterIndex] = c;
         }
-        const guards = [...(guardMetadata?.guards ?? []), ...globalGuards];
+        const guards = [...globalGuards, ...(guardMetadata?.guards ?? [])];
         for (const guard of guards) {
           const guardInstance =
             typeof guard === 'function' ? await injector.resolve(guard) : guard;
