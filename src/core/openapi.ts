@@ -2,6 +2,7 @@ import type {
   OpenAPIObject,
   OperationObject,
   ResponseObject,
+  SchemaObject,
 } from 'openapi3-ts/oas30';
 import { ControllerFullMetadata } from './get-controller-full-metadata.js';
 import { generateSchema } from '@st-api/zod-openapi';
@@ -10,13 +11,23 @@ import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-
 import { getOpenapiExceptions } from './exception/get-openapi-exceptions.js';
 import { ExceptionFactory } from './exception/exception.type.js';
 import { Exception } from './exception/exception.js';
+import { ZodSchema, ZodUndefined, ZodVoid } from 'zod';
 
 export class Openapi {
   constructor(document: OpenAPIObject) {
     this.#document = document;
   }
 
+  readonly #voidResponses = [ZodVoid, ZodUndefined] as const;
+
   #document: OpenAPIObject;
+
+  #getResponseSchema(schema: ZodSchema): SchemaObject | undefined {
+    const isVoid = this.#voidResponses.some(
+      (voidSchema) => schema instanceof voidSchema,
+    );
+    return isVoid ? generateSchema(schema) : undefined;
+  }
 
   addPath({
     controller,
@@ -93,11 +104,12 @@ export class Openapi {
       }
     }
     if (response) {
+      const responseSchema = this.#getResponseSchema(response.schema);
       operation.responses[response.statusCode] = {
         description: getReasonPhrase(response.statusCode),
-        content: {
+        content: responseSchema && {
           'application/json': {
-            schema: generateSchema(response.schema),
+            schema: responseSchema,
           },
         },
       } satisfies ResponseObject;
