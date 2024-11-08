@@ -26,7 +26,7 @@ export class Openapi {
     const isVoid = this.#voidResponses.some(
       (voidSchema) => schema instanceof voidSchema,
     );
-    return isVoid ? generateSchema(schema) : undefined;
+    return isVoid ? undefined : generateSchema(schema);
   }
 
   addPath({
