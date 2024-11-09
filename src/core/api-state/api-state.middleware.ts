@@ -2,7 +2,7 @@ import { HonoRequest, MiddlewareHandler } from 'hono';
 import { apiStateRunInContext, createCorrelationId } from './api-state.js';
 
 function correlationIdGetter(request: HonoRequest) {
-  const correlationIdHeaderRaw = request.header('x-correlation-id');
+  const correlationIdHeaderRaw = request.raw.headers.get('x-correlation-id');
   const correlationIdHeader = correlationIdHeaderRaw?.length
     ? correlationIdHeaderRaw
     : undefined;
@@ -10,13 +10,13 @@ function correlationIdGetter(request: HonoRequest) {
 }
 
 function traceIdGetter(request: HonoRequest) {
-  const traceIdHeaderRaw = request.header('x-trace-id');
+  const traceIdHeaderRaw = request.raw.headers.get('x-trace-id');
   const traceIdHeader = traceIdHeaderRaw?.length ? traceIdHeaderRaw : undefined;
   return traceIdHeader || createCorrelationId();
 }
 
 function executionIdGetter(request: HonoRequest) {
-  const executionIdHeaderRaw = request.header('x-trace-id');
+  const executionIdHeaderRaw = request.raw.headers.get('x-execution-id');
   const executionIdHeader = executionIdHeaderRaw?.length
     ? executionIdHeaderRaw
     : undefined;
