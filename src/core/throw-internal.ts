@@ -3,6 +3,7 @@ import { Exception } from './exception/exception.js';
 import { UNKNOWN_INTERNAL_SERVER_ERROR } from './exception/core-exceptions.js';
 
 export function throwInternal(error: unknown): never {
+  console.debug('(throwInternal) error', error);
   const exception =
     error instanceof Exception ? error : UNKNOWN_INTERNAL_SERVER_ERROR();
   throw new HTTPException(exception.status, {
