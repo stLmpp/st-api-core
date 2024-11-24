@@ -134,8 +134,32 @@ export async function createHonoApp<T extends Hono>({
     optional: true,
   });
 
-  for (const controller of controllers) {
-    const fullMetadata = getControllerFullMetadata(controller);
+  const controllersWithMetadata = controllers
+    .map((controller) => ({
+      controller,
+      fullMetadata: getControllerFullMetadata(controller),
+    }))
+    .sort((controllerA, controllerB) => {
+      let pathA = controllerA.fullMetadata?.controller.path ?? '/';
+      let pathB = controllerB.fullMetadata?.controller.path ?? '/';
+      if (pathA && !pathA?.startsWith('/')) {
+        pathA = '/' + pathA;
+      }
+      if (pathB && !pathB?.startsWith('/')) {
+        pathB = '/' + pathB;
+      }
+      const diff = pathA.split('/').length - pathB.split('/').length;
+      if (diff) {
+        // If there's multiple segments in the
+        // end-point, it must come first
+        return diff;
+      }
+      // Just order the rest in DESC order, to put the dynamic
+      // path params last
+      return pathB.localeCompare(pathA);
+    });
+
+  for (const { controller, fullMetadata } of controllersWithMetadata) {
     if (!fullMetadata) {
       throw new Error(
         `Could resolve metadata for controller ${controller?.name}. Did you forget to put it in the controllers array?`,
