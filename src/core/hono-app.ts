@@ -25,6 +25,9 @@ import { FORBIDDEN, INVALID_RESPONSE } from './exception/core-exceptions.js';
 import { formatZodErrorString } from '../common/zod-error-formatter.js';
 import { ExceptionFactory } from './exception/exception.type.js';
 import { Exception } from './exception/exception.js';
+import { cors } from 'hono/cors';
+
+type CorsOptions = NonNullable<Parameters<typeof cors>[0]>;
 
 export interface HonoAppOptions<T extends Hono> {
   hono: T;
@@ -36,6 +39,7 @@ export interface HonoAppOptions<T extends Hono> {
   getCorrelationId?: (request: HonoRequest) => string | undefined | null;
   getExecutionId?: (request: HonoRequest) => string | undefined | null;
   extraGlobalExceptions?: Array<ExceptionFactory | Exception>;
+  cors?: CorsOptions;
 }
 
 export interface HonoApp<T extends Hono> {
@@ -108,9 +112,13 @@ export async function createHonoApp<T extends Hono>({
     paths: {},
   });
 
+  hono.use(secureHeaders()).use(compress());
+
+  if (options.cors) {
+    hono.use(cors(options.cors));
+  }
+
   hono
-    .use(secureHeaders())
-    .use(compress())
     .get('/openapi.json', (c) => c.json(openapi.getDocument()))
     .use(
       apiStateMiddleware({
