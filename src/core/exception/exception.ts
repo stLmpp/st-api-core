@@ -12,7 +12,7 @@ import type {
   ExceptionFactoryWithoutError,
   ExceptionType,
 } from './exception.type.js';
-import { StatusCode } from 'hono/utils/http-status';
+import { ContentfulStatusCode, StatusCode } from 'hono/utils/http-status';
 
 function getCorrelationIdWithDefault() {
   const [, correlationId] = safe(() => getCorrelationId());
@@ -26,7 +26,7 @@ function getTraceIdWithDefault() {
 
 export class Exception extends Error {
   constructor(
-    public readonly status: StatusCode,
+    public readonly status: ContentfulStatusCode,
     message: string,
     public readonly errorCode: string,
     public readonly error: string,
@@ -76,7 +76,7 @@ export class Exception extends Error {
 
   static fromJSON(exceptionJson: ExceptionType): Exception {
     return new Exception(
-      exceptionJson.status as StatusCode,
+      exceptionJson.status as ContentfulStatusCode,
       exceptionJson.message,
       exceptionJson.errorCode,
       exceptionJson.error,
