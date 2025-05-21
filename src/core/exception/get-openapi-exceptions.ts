@@ -9,10 +9,10 @@ import * as CoreExceptions from './core-exceptions.js';
 import { Exception } from './exception.js';
 import { ExceptionSchema } from './exception.schema.js';
 import type { ExceptionFactory } from './exception.type.js';
-import { generateSchema } from '@st-api/zod-openapi';
+import { zodToJSONSchema } from '../../common/zod-util.js';
 
 const CORRELATION_ID_EXAMPLE = '66811850-87e9-493b-b956-0b563e69297d';
-const EXCEPTION_OPENAPI_SCHEMA = generateSchema(ExceptionSchema);
+const EXCEPTION_OPENAPI_SCHEMA = zodToJSONSchema(ExceptionSchema);
 const CORE_EXCEPTIONS = Object.values(CoreExceptions);
 
 export interface OpenapiException {

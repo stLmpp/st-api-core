@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const ExceptionSchema = z.object({
   status: z.number().min(400).max(599),

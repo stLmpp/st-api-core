@@ -1,15 +1,15 @@
-import { z, ZodSchema } from 'zod';
+import { z, ZodType } from 'zod/v4';
 import { StatusCode } from 'hono/utils/http-status';
 
 const ZResMetadataSymbol = Symbol('ZResMetadata');
 
 export interface ZResMetadata {
-  schema: ZodSchema;
+  schema: ZodType;
   statusCode: StatusCode;
 }
 
 interface ZRes {
-  (schema?: ZodSchema, status?: StatusCode): ClassDecorator;
+  (schema?: ZodType, status?: StatusCode): ClassDecorator;
   getMetadata(target: any): ZResMetadata | undefined;
   setMetadata(target: any, metadata: ZResMetadata): void;
 }
@@ -20,10 +20,7 @@ const setMetadata: ZRes['setMetadata'] = (target, metadata) => {
   Reflect.defineMetadata(ZResMetadataSymbol, metadata, target);
 };
 
-function Decorator(
-  schema?: ZodSchema,
-  status: StatusCode = 200,
-): ClassDecorator {
+function Decorator(schema?: ZodType, status: StatusCode = 200): ClassDecorator {
   return (target: any) => {
     setMetadata(target, {
       schema: schema ?? z.void(),

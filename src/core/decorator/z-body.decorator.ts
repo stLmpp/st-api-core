@@ -1,14 +1,14 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod/v4';
 
 const ZBodyMetadataSymbol = Symbol('ZBodyMetadata');
 
 export interface ZBodyMetadata {
-  schema: ZodSchema | undefined;
+  schema: ZodType | undefined;
   parameterIndex: number;
 }
 
 interface ZBody {
-  (schema?: ZodSchema): ParameterDecorator;
+  (schema?: ZodType): ParameterDecorator;
   getMetadata(
     target: any,
     propertyKey: string | symbol | undefined,
@@ -31,7 +31,7 @@ const setMetadata: ZBody['setMetadata'] = (target, propertyKey, metadata) => {
   );
 };
 
-function Decorator(schema?: ZodSchema): ParameterDecorator {
+function Decorator(schema?: ZodType): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     setMetadata(target.constructor, propertyKey, {
       schema,

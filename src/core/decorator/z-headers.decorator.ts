@@ -1,14 +1,14 @@
-import { ZodObject, ZodSchema } from 'zod';
+import { ZodObject, ZodType } from 'zod/v4';
 
 const ZHeadersMetadataSymbol = Symbol('ZHeadersMetadata');
 
 export interface ZHeadersMetadata {
-  schema: ZodObject<Record<string, ZodSchema>> | undefined;
+  schema: ZodObject<Record<string, ZodType>> | undefined;
   parameterIndex: number;
 }
 
 interface ZHeaders {
-  (schema?: ZodSchema): ParameterDecorator;
+  (schema?: ZodType): ParameterDecorator;
   getMetadata(
     target: any,
     propertyKey: string | symbol | undefined,
@@ -35,7 +35,7 @@ const setMetadata: ZHeaders['setMetadata'] = (
   );
 };
 
-function Decorator(schema?: ZodSchema): ParameterDecorator {
+function Decorator(schema?: ZodType): ParameterDecorator {
   const isValidSchema = schema instanceof ZodObject;
 
   if (schema && !isValidSchema) {

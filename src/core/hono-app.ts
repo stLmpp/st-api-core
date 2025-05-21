@@ -1,5 +1,5 @@
 import type { Class, PackageJson } from 'type-fest';
-import { Injector, Provider } from '@stlmpp/di';
+import { FactoryProvider, Injector, Provider } from '@stlmpp/di';
 import { Hono, HonoRequest } from 'hono';
 import { MethodType } from './decorator/controller.decorator.js';
 import { apiStateMiddleware } from './api-state/api-state.middleware.js';
@@ -47,16 +47,13 @@ export interface HonoApp<T extends Hono> {
   injector: Injector;
 }
 
-export async function createHonoApp<T extends Hono>({
-  hono,
-  controllers,
-  providers,
-  swaggerDocumentBuilder,
-  ...options
-}: HonoAppOptions<T>): Promise<HonoApp<T>> {
-  const injector = Injector.create('App');
-  providers ??= [];
-  providers.push({
+function getDefaultNameProvider<T extends Hono>(
+  options: Omit<
+    HonoAppOptions<T>,
+    'hono' | 'controllers' | 'swaggerDocumentBuilder' | 'providers'
+  >,
+): FactoryProvider {
+  return {
     provide: StApiName,
     useFactory: () => {
       let name = options.name;
@@ -100,7 +97,19 @@ export async function createHonoApp<T extends Hono>({
       }
       return name;
     },
-  });
+  };
+}
+
+export async function createHonoApp<T extends Hono>({
+  hono,
+  controllers,
+  providers,
+  swaggerDocumentBuilder,
+  ...options
+}: HonoAppOptions<T>): Promise<HonoApp<T>> {
+  const injector = Injector.create('App');
+  providers ??= [];
+  providers.unshift(getDefaultNameProvider(options));
   injector.register(providers);
 
   const openapi = new Openapi({
@@ -158,11 +167,11 @@ export async function createHonoApp<T extends Hono>({
       }
       const diff = pathA.split('/').length - pathB.split('/').length;
       if (diff) {
-        // If there's multiple segments in the
+        // If there are multiple segments in the
         // end-point, it must come first
         return diff;
       }
-      // Just order the rest in DESC order, to put the dynamic
+      // Order the rest in DESC order, to put the dynamic
       // path params last
       return pathB.localeCompare(pathA);
     });

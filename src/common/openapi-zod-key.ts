@@ -1,0 +1,1 @@
+export const OPENAPI_ZOD_KEY = '__ST_API_CORE_OPENAPI_ZOD_KEY__';

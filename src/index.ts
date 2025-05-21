@@ -1,8 +1,4 @@
 import 'reflect-metadata';
-import { extendZodWithOpenApi } from '@st-api/zod-openapi';
-import { z } from 'zod';
-
-extendZodWithOpenApi(z);
 
 // Common
 export { arrayGroupToMap } from './common/array-group-to-map.js';
@@ -18,6 +14,7 @@ export {
 } from './common/common-schemas.js';
 export { getClazz } from './common/get-clazz.js';
 export { isArray } from './common/is-array.js';
+export { OPENAPI_ZOD_KEY } from './common/openapi-zod-key.js';
 export {
   safe,
   type Safe,
@@ -30,9 +27,6 @@ export {
   formatZodError,
   type ZodErrorFormatted,
 } from './common/zod-error-formatter.js';
-
-// Zod
-export { extendApi } from '@st-api/zod-openapi';
 
 // Api State
 export { apiStateMiddleware } from './core/api-state/api-state.middleware.js';

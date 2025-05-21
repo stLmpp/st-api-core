@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 import type { Exception } from './exception.js';
 import { ExceptionSchema } from './exception.schema.js';

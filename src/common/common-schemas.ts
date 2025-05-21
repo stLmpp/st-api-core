@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const ParamIntSchema = z
   .string()
@@ -6,7 +6,7 @@ export const ParamIntSchema = z
   .min(1)
   .regex(/^-?\d{1,16}$/, 'Must be an integer')
   .transform(Number)
-  .pipe(z.number().int().safe());
+  .pipe(z.int());
 
 export const ParamBigIntSchema = z
   .string()
@@ -31,8 +31,7 @@ export const ParamBooleanSchema = z
   .transform((value) => value === 'true')
   .pipe(z.boolean());
 
-export const ParamDatetimeSchema = z
-  .string()
+export const ParamDatetimeSchema = z.iso
   .datetime()
   .transform((datetime) => new Date(datetime))
   .pipe(z.date());

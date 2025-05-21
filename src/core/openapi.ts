@@ -5,13 +5,13 @@ import type {
   SchemaObject,
 } from 'openapi3-ts/oas30';
 import { ControllerFullMetadata } from './get-controller-full-metadata.js';
-import { generateSchema } from '@st-api/zod-openapi';
 import { getReasonPhrase } from 'http-status-codes';
 import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-openapi.js';
 import { getOpenapiExceptions } from './exception/get-openapi-exceptions.js';
 import { ExceptionFactory } from './exception/exception.type.js';
 import { Exception } from './exception/exception.js';
-import { ZodSchema, ZodUndefined, ZodVoid } from 'zod';
+import { ZodType, ZodUndefined, ZodVoid } from 'zod/v4';
+import { zodIsOptional, zodToJSONSchema } from '../common/zod-util.js';
 
 export class Openapi {
   constructor(document: OpenAPIObject) {
@@ -22,11 +22,11 @@ export class Openapi {
 
   #document: OpenAPIObject;
 
-  #getResponseSchema(schema: ZodSchema): SchemaObject | undefined {
+  #getResponseSchema(schema: ZodType): SchemaObject | undefined {
     const isVoid = this.#voidResponses.some(
       (voidSchema) => schema instanceof voidSchema,
     );
-    return isVoid ? undefined : generateSchema(schema);
+    return isVoid ? undefined : zodToJSONSchema(schema);
   }
 
   addPath({
@@ -64,10 +64,10 @@ export class Openapi {
     );
     if (body?.schema) {
       operation.requestBody = {
-        required: !body.schema.isOptional(),
+        required: !zodIsOptional(body.schema),
         content: {
           'application/json': {
-            schema: generateSchema(body.schema),
+            schema: zodToJSONSchema(body.schema),
           },
         },
       };
@@ -77,9 +77,9 @@ export class Openapi {
       for (const [key, value] of Object.entries(params.schema.shape)) {
         operation.parameters.push({
           name: key,
-          required: !value.isOptional(),
+          required: !zodIsOptional(value),
           in: 'path',
-          schema: generateSchema(value),
+          schema: zodToJSONSchema(value),
         });
       }
     }
@@ -87,9 +87,9 @@ export class Openapi {
       for (const [key, value] of Object.entries(query.schema.shape)) {
         operation.parameters.push({
           name: key,
-          required: !value.isOptional(),
+          required: !zodIsOptional(value),
           in: 'query',
-          schema: generateSchema(value),
+          schema: zodToJSONSchema(value),
         });
       }
     }
@@ -97,9 +97,9 @@ export class Openapi {
       for (const [key, value] of Object.entries(headers.schema.shape)) {
         operation.parameters.push({
           name: key,
-          required: !value.isOptional(),
+          required: !zodIsOptional(value),
           in: 'header',
-          schema: generateSchema(value),
+          schema: zodToJSONSchema(value),
         });
       }
     }

@@ -1,4 +1,4 @@
-import { type ZodError, type ZodIssue, ZodIssueCode } from 'zod';
+import { z, type ZodError } from 'zod/v4';
 
 import { arrayGroupToMap } from './array-group-to-map.js';
 import { arrayUniqWith } from './array-uniq-with.js';
@@ -62,9 +62,9 @@ function formatZodErrorInternal(
 }
 
 /**
- * @description Flatten a {@link ZodIssue} into an array of objects
+ * @description Flatten a {@link z.core.$ZodIssue} into an array of objects
  */
-export function formatZodIssue(issue: ZodIssue): ZodErrorFormatted[] {
+export function formatZodIssue(issue: z.core.$ZodIssue): ZodErrorFormatted[] {
   const errors: ZodErrorFormatted[] = [
     {
       message: issue.message,
@@ -72,16 +72,12 @@ export function formatZodIssue(issue: ZodIssue): ZodErrorFormatted[] {
     },
   ];
   switch (issue.code) {
-    case ZodIssueCode.invalid_union: {
-      errors.push(...formatZodErrorInternal(issue.unionErrors));
-      break;
-    }
-    case ZodIssueCode.invalid_arguments: {
-      errors.push(...formatZodErrorInternal(issue.argumentsError));
-      break;
-    }
-    case ZodIssueCode.invalid_return_type: {
-      errors.push(...formatZodErrorInternal(issue.returnTypeError));
+    case 'invalid_union': {
+      errors.push(
+        ...issue.errors.flatMap((issues) =>
+          issues.flatMap((innerIssue) => formatZodIssue(innerIssue)),
+        ),
+      );
       break;
     }
   }
@@ -92,12 +88,14 @@ export function formatZodIssue(issue: ZodIssue): ZodErrorFormatted[] {
  * @description Transform a path array into a string
  * Example: ["config", "requests", 0, "name"] --> "config.requests[0].name"
  */
-export function formatZodIssuePath(path: (string | number)[]): string {
+export function formatZodIssuePath(path: (keyof any)[]): string {
   const [first, ...paths] = path;
   return (
-    (typeof first === 'number' ? `[${first}]` : first) +
+    String(typeof first === 'number' ? `[${first}]` : first) +
     paths
-      .map((item) => (typeof item === 'number' ? `[${item}]` : `.${item}`))
+      .map((item) =>
+        typeof item === 'number' ? `[${item}]` : `.${String(item)}`,
+      )
       .join('')
   );
 }
