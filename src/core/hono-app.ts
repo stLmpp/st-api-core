@@ -34,7 +34,7 @@ export interface HonoAppOptions<T extends Hono> {
   controllers: Class<Handler>[];
   providers?: Array<Provider | Class<any>>;
   swaggerDocumentBuilder?: (document: OpenAPIObject) => OpenAPIObject;
-  swaggerUIOptions?: SwaggerUIOptions;
+  swaggerUIOptions?: Partial<SwaggerUIOptions>;
   name?: string;
   getTraceId?: (request: HonoRequest) => string | undefined | null;
   getCorrelationId?: (request: HonoRequest) => string | undefined | null;
