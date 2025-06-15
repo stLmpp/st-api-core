@@ -1,6 +1,6 @@
 {
   "name": "@st-api/core",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "description": "",
   "homepage": "https://github.com/stLmpp/st-api-core#readme",
   "bugs": {
@@ -42,8 +42,7 @@
     "hono": "~4.7.11",
     "http-status-codes": "~2.3.0",
     "openapi3-ts": "~4.4.0",
-    "type-fest": "~4.41.0",
-    "zod-openapi": "~4.2.4"
+    "type-fest": "~4.41.0"
   },
   "devDependencies": {
     "@st-api/config": "~2.1.0",
