@@ -11,7 +11,7 @@ import { addMissingExceptionsOpenapi } from './exception/add-missing-exceptions-
 import { getOpenapiExceptions } from './exception/get-openapi-exceptions.js';
 import { ExceptionFactory } from './exception/exception.type.js';
 import { Exception } from './exception/exception.js';
-import { ZodSchema, ZodUndefined, ZodVoid } from 'zod';
+import { ZodTypeAny, ZodUndefined, ZodVoid } from 'zod';
 
 export class Openapi {
   constructor(document: OpenAPIObject) {
@@ -22,7 +22,7 @@ export class Openapi {
 
   #document: OpenAPIObject;
 
-  #getResponseSchema(schema: ZodSchema): SchemaObject | undefined {
+  #getResponseSchema(schema: ZodTypeAny): SchemaObject | undefined {
     const isVoid = this.#voidResponses.some(
       (voidSchema) => schema instanceof voidSchema,
     );

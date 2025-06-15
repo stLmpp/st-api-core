@@ -1,14 +1,14 @@
-import { ZodObject, ZodSchema } from 'zod';
+import { ZodObject, ZodTypeAny } from 'zod';
 
 const ZParamsMetadataSymbol = Symbol('ZParamsMetadata');
 
 export interface ZParamsMetadata {
-  schema: ZodObject<Record<string, ZodSchema>> | undefined;
+  schema: ZodObject<Record<string, ZodTypeAny>> | undefined;
   parameterIndex: number;
 }
 
 interface ZParams {
-  (schema?: ZodSchema): ParameterDecorator;
+  (schema?: ZodTypeAny): ParameterDecorator;
   getMetadata(
     target: any,
     propertyKey: string | symbol | undefined,
@@ -31,7 +31,7 @@ const setMetadata: ZParams['setMetadata'] = (target, propertyKey, metadata) => {
   );
 };
 
-function Decorator(schema?: ZodSchema): ParameterDecorator {
+function Decorator(schema?: ZodTypeAny): ParameterDecorator {
   const isValidSchema = schema instanceof ZodObject;
   if (schema && !isValidSchema) {
     throw new TypeError('ZParams decorator only support ZodObject as schema');

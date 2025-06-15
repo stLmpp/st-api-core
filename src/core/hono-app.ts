@@ -3,7 +3,7 @@ import { Injector, Provider } from '@stlmpp/di';
 import { Hono, HonoRequest } from 'hono';
 import { MethodType } from './decorator/controller.decorator.js';
 import { apiStateMiddleware } from './api-state/api-state.middleware.js';
-import { swaggerUI } from '@hono/swagger-ui';
+import { swaggerUI, SwaggerUIOptions } from '@hono/swagger-ui';
 import { StatusCodes } from 'http-status-codes';
 import { createHeaderValidator } from './internal/create-header-validator.js';
 import { createBodyValidator } from './internal/create-body-validator.js';
@@ -34,6 +34,7 @@ export interface HonoAppOptions<T extends Hono> {
   controllers: Class<Handler>[];
   providers?: Array<Provider | Class<any>>;
   swaggerDocumentBuilder?: (document: OpenAPIObject) => OpenAPIObject;
+  swaggerUIOptions?: SwaggerUIOptions;
   name?: string;
   getTraceId?: (request: HonoRequest) => string | undefined | null;
   getCorrelationId?: (request: HonoRequest) => string | undefined | null;
@@ -56,7 +57,7 @@ export async function createHonoApp<T extends Hono>({
 }: HonoAppOptions<T>): Promise<HonoApp<T>> {
   const injector = Injector.create('App');
   providers ??= [];
-  providers.push({
+  providers.unshift({
     provide: StApiName,
     useFactory: () => {
       let name = options.name;
@@ -128,12 +129,13 @@ export async function createHonoApp<T extends Hono>({
       }),
     )
     .use(
-      '/openapi', // TODO fix openapi on emulator
+      '/openapi',
       swaggerUI({
         url: '/openapi.json',
         persistAuthorization: true,
         displayRequestDuration: true,
         deepLinking: true,
+        ...options.swaggerUIOptions,
       }),
     )
     .get('/help', (c) => c.redirect('/openapi', StatusCodes.MOVED_PERMANENTLY));
