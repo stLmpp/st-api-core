@@ -74,10 +74,14 @@ export function apiStateRunInContext<T>(
   {
     metadata = {},
     ...partialState
-  }: Partial<ApiState & { metadata?: Record<string, unknown> }> = {},
+  }: Partial<ApiState & { metadata?: Record<string | symbol, unknown> }> = {},
 ): Promise<T> | T {
+  const entries: [string | symbol, unknown][] = Object.entries(metadata);
+  const entriesSymbol = Object.getOwnPropertySymbols(metadata).map(
+    (key) => [key, metadata[key]] as [symbol, unknown],
+  );
   const metadataMap = new Map<string | symbol, unknown>(
-    Object.entries(metadata),
+    entries.concat(entriesSymbol),
   );
   const initialState: ApiStateInternal = {
     ...partialState,
